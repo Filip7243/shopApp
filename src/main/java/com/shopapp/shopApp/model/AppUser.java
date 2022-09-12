@@ -34,7 +34,7 @@ public class AppUser implements UserDetails {
     private String email; // username
     private byte[] password;
     @OneToMany(fetch = FetchType.EAGER)
-    private Set<UserRole> authorities;
+    private Set<AppUserRole> authorities;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
     private Boolean isExpired;
@@ -44,8 +44,8 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = this.authorities.stream().
-                map((authority) -> new SimpleGrantedAuthority(authority.getName())).toList();
+        Set<SimpleGrantedAuthority> authorities = this.authorities.stream().
+                map((authority) -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toSet());
 
         return authorities;
     }

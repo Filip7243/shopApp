@@ -14,11 +14,11 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole {
+public class AppUserRole {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    private String name;
+    private String name; // unique
     private String description;
 }
