@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -34,8 +35,11 @@ public class AppUser implements UserDetails {
     private byte[] password;
     @OneToMany(fetch = FetchType.EAGER)
     private Set<UserRole> authorities;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiredAt;
     private Boolean isExpired;
     private Boolean isLocked;
+    private Boolean isCredentialsExpired;
     private Boolean isEnabled;
 
     @Override
@@ -53,26 +57,26 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return !isExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return !isLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return !isCredentialsExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isEnabled;
     }
 }
