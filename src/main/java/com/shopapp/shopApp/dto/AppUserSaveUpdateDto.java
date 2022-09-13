@@ -11,4 +11,6 @@ public class AppUserSaveDto {
     private String lastName;
     private String email; // username
     private byte[] password;
+    private String phoneNumber;
+    private String address;
 }
