@@ -31,13 +31,14 @@ public class AppUserController {
     }
 
     @PutMapping("/update/{userCode}")
-    public void updateUser(@PathVariable String userCode, AppUserSaveUpdateDto user) {
+    public void updateUser(@PathVariable String userCode,
+                           @RequestBody AppUserSaveUpdateDto user) {
         userService.updateUser(userCode, user);
     }
 
     @PostMapping("/roles/add")
-    public void addRoleToUser(String email, String roleName) {
-        userService.addRoleToUser(email, roleName);
+    public void addRoleToUser(@RequestParam String userCode, @RequestParam String roleName) {
+        userService.addRoleToUser(userCode, roleName);
     }
 
 

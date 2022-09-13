@@ -8,7 +8,7 @@ public interface AppUserService {
     void saveUser(AppUserSaveUpdateDto user);
     void deleteUserWithUserCode(String userCode);
     void updateUser(String userCode, AppUserSaveUpdateDto user);
-    void addRoleToUser(String email, String roleName);
+    void addRoleToUser(String userCode, String roleName);
 
 
 }

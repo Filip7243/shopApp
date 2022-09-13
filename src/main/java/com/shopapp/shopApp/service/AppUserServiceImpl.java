@@ -93,9 +93,9 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     }
 
     @Override
-    public void addRoleToUser(String email, String roleName) {
-        AppUser appUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
+    public void addRoleToUser(String userCode, String roleName) {
+        AppUser appUser = userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
         AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new IllegalStateException("No role with name: " + roleName));
         appUser.getRoles().add(role);
     }
