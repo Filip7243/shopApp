@@ -32,7 +32,7 @@ public class AppUser implements UserDetails {
     private String name;
     private String lastName;
     private String email; // username
-    private byte[] password;
+    private char[] password;
     private String phoneNumber;
     private String address;
     @OneToMany(fetch = FetchType.EAGER)
