@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AppUserRoleUpdateDto {
+public class AppUserRoleSaveUpdateDto {
 
     private String name; // unique
     private String description;

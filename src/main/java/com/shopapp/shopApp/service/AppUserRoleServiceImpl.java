@@ -1,6 +1,6 @@
 package com.shopapp.shopApp.service;
 
-import com.shopapp.shopApp.dto.AppUserRoleUpdateDto;
+import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
     }
 
     @Override
-    public void updateRole(String roleName, AppUserRoleUpdateDto role) {
+    public void updateRole(String roleName, AppUserRoleSaveUpdateDto role) {
         if(roleRepository.existsByName(roleName)) {
             AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).orElseThrow();
             foundRole.setName(role.getName());

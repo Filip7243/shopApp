@@ -1,6 +1,6 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.dto.AppUserRoleUpdateDto;
+import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class AppUserRoleController {
     }
 
     @PostMapping("/add")
-    public void addRole(@RequestBody AppUserRoleUpdateDto role) {
+    public void addRole(@RequestBody AppUserRoleSaveUpdateDto role) {
         AppUserRole newRole = new AppUserRole(null, role.getName(), role.getDescription()); //TODO: mapper
         roleService.saveRole(newRole);
     }
@@ -33,7 +33,7 @@ public class AppUserRoleController {
 
     @PutMapping("/update/{roleName}")
     public void updateRole(@PathVariable String roleName,
-                           @RequestBody AppUserRoleUpdateDto role) {
+                           @RequestBody AppUserRoleSaveUpdateDto role) {
         roleService.updateRole(roleName, role);
     }
 
