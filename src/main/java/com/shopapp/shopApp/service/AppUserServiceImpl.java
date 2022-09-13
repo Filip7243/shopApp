@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUser;
+
 @Service
 @AllArgsConstructor
 public class AppUserServiceImpl implements UserDetailsService, AppUserService {
@@ -50,26 +52,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException("This user already exists");
         }
-
-        //TODO: make mapper
-        AppUser newUser = new AppUser(
-                null,
-                UUID.randomUUID().toString(),
-                user.getName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.getPassword(),
-                "123-456-789",
-                "New York",
-                Set.of(new AppUserRole(null, "ROLE_USER", "User can READ")),
-                LocalDateTime.now(),
-                LocalDateTime.now().plusYears(1),
-                false,
-                false,
-                false,
-                true
-        );
-
+        AppUser newUser = mapToAppUser(null, user);
         userRepository.save(newUser);
     }
 
