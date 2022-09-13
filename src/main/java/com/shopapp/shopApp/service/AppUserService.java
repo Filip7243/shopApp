@@ -1,13 +1,13 @@
 package com.shopapp.shopApp.service;
 
-import com.shopapp.shopApp.dto.AppUserSaveDto;
+import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 
 public interface AppUserService {
 
-    void saveUser(AppUserSaveDto user);
+    void saveUser(AppUserSaveUpdateDto user);
     void deleteUserWithUserCode(String userCode);
-    void updateUser(AppUser user);
+    void updateUser(String userCode, AppUserSaveUpdateDto user);
     void addRoleToUser(String email, String roleName);
 
 

@@ -5,12 +5,17 @@ import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AppUserRoleServiceImpl implements AppUserRoleService {
 
     private final AppUserRoleRepository roleRepository;
 
+    public List<AppUserRole> getRoles() {
+        return roleRepository.findAll();
+    }
     @Override
     public void saveRole(AppUserRole role) {
         String name = role.getName();
@@ -35,6 +40,5 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
         } else {
             throw new IllegalStateException("There is no role with name: " + name);
         }
-
     }
 }

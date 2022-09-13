@@ -1,12 +1,11 @@
 package com.shopapp.shopApp.service;
 
-import com.shopapp.shopApp.dto.AppUserSaveDto;
+import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,14 +27,24 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         return userRepository.findAll();
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).
-                orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
+    public AppUser getUserWithEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
+    }
+
+    public AppUser getUserWithUserCode(String userCode) {
+        return userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
     }
 
     @Override
-    public void saveUser(AppUserSaveDto user) {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
+    }
+
+    @Override
+    public void saveUser(AppUserSaveUpdateDto user) {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new IllegalStateException("This user already exists");
@@ -50,6 +58,8 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
+                "123-456-789",
+                "New York",
                 new HashSet<>(),
                 LocalDateTime.now(),
                 LocalDateTime.now().plusYears(1),
@@ -70,8 +80,16 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     }
 
     @Override
-    public void updateUser(AppUser user) {
-        userRepository.save(user);
+    public void updateUser(String userCode, AppUserSaveUpdateDto user) {
+        AppUser foundUser = getUserWithUserCode(userCode);
+        foundUser.setName(user.getName());
+        foundUser.setLastName(user.getLastName());
+        foundUser.setEmail(user.getEmail());
+        foundUser.setPassword(user.getPassword());
+        foundUser.setPhoneNumber(user.getPhoneNumber());
+        foundUser.setAddress(user.getAddress());
+
+        userRepository.save(foundUser);
     }
 
     @Override
@@ -79,7 +97,6 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser appUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
         AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new IllegalStateException("No role with name: " + roleName));
-        SimpleGrantedAuthority a = new SimpleGrantedAuthority(roleName);
-        appUser.getAuthorities().add(a);
+        appUser.getRoles().add(role);
     }
 }
