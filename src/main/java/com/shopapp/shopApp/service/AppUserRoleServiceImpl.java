@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.dto.AppUserRoleUpdateDto;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
@@ -33,12 +34,14 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
     }
 
     @Override
-    public void updateRole(AppUserRole role) {
-        String name = role.getName();
-        if(roleRepository.existsByName(name)) {
-            roleRepository.save(role);
+    public void updateRole(String roleName, AppUserRoleUpdateDto role) {
+        if(roleRepository.existsByName(roleName)) {
+            AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).orElseThrow();
+            foundRole.setName(role.getName());
+            foundRole.setDescription(role.getDescription());
+            roleRepository.save(foundRole);
         } else {
-            throw new IllegalStateException("There is no role with name: " + name);
+            throw new IllegalStateException("There is no role with name: " + roleName);
         }
     }
 }

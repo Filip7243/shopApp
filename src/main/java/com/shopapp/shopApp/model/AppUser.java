@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
 @Getter
@@ -35,7 +39,7 @@ public class AppUser implements UserDetails {
     private char[] password;
     private String phoneNumber;
     private String address;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = ALL)
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
@@ -46,10 +50,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> authorities = this.roles.stream().
-                map((authority) -> new SimpleGrantedAuthority(authority.getName())).collect(Collectors.toSet());
-
-        return authorities;
+        return this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
     }
 
     @Override

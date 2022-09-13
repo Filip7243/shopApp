@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -60,7 +61,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
                 user.getPassword(),
                 "123-456-789",
                 "New York",
-                new HashSet<>(),
+                Set.of(new AppUserRole(null, "ROLE_USER", "User can READ")),
                 LocalDateTime.now(),
                 LocalDateTime.now().plusYears(1),
                 false,
@@ -92,11 +93,13 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         userRepository.save(foundUser);
     }
 
+    //TODO: ogarnąć czy nie lepszym pomysłem nie byłoby usunięcie fileda roles i doawanie bezpośrednio o authorities
     @Override
     public void addRoleToUser(String userCode, String roleName) {
         AppUser appUser = userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
         AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new IllegalStateException("No role with name: " + roleName));
         appUser.getRoles().add(role);
+        userRepository.save(appUser);
     }
 }
