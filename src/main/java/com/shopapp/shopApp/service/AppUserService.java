@@ -6,8 +6,11 @@ import com.shopapp.shopApp.model.AppUser;
 public interface AppUserService {
 
     void saveUser(AppUserSaveUpdateDto user);
+
     void deleteUserWithUserCode(String userCode);
+
     void updateUser(String userCode, AppUserSaveUpdateDto user);
+
     void addRoleToUser(String userCode, String roleName);
 
 

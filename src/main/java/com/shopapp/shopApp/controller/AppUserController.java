@@ -41,5 +41,4 @@ public class AppUserController {
         userService.addRoleToUser(userCode, roleName);
     }
 
-
 }
