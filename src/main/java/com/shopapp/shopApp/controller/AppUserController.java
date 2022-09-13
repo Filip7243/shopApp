@@ -21,7 +21,7 @@ public class AppUserController {
     }
 
     @PostMapping("/save")
-    public void saveUser(AppUserSaveUpdateDto user) {
+    public void saveUser(@RequestBody AppUserSaveUpdateDto user) {
         userService.saveUser(user);
     }
 
