@@ -15,7 +15,7 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserServiceImpl userService;
-    @GetMapping("/all")
+    @GetMapping("/all")//TODO: make dto to display less specific userinfo
     public List<AppUser> getUsers() {
         return userService.getUsers();
     }

@@ -28,6 +28,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
     private final AppUserServiceImpl userService;
 
+    //TODO: email and register
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
