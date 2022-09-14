@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -32,10 +33,10 @@ public class AppUser implements UserDetails, Serializable {
     private String name;
     private String lastName;
     private String email; // username
-    private char[] password;
+    private String password;
     private String phoneNumber;
     private String address;
-    @OneToMany(fetch = EAGER)
+    @OneToMany(fetch = EAGER, cascade = ALL)
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
@@ -51,7 +52,7 @@ public class AppUser implements UserDetails, Serializable {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.password;
     }
 
     @Override

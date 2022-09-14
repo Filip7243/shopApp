@@ -3,6 +3,8 @@ package com.shopapp.shopApp.mapper;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
+import com.shopapp.shopApp.security.CustomPasswordEncoder;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Set;

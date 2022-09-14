@@ -5,26 +5,27 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
+import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUser;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 
     private final AppUserRepository userRepository;
     private final AppUserRoleRepository roleRepository;
+    private final CustomPasswordEncoder passwordEncoder;
 
     public List<AppUser> getUsers() {
         return userRepository.findAll();
@@ -53,6 +54,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
             throw new IllegalStateException("This user already exists");
         }
         AppUser newUser = mapToAppUser(null, user);
+        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
     }
 
@@ -69,7 +71,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         foundUser.setName(user.getName());
         foundUser.setLastName(user.getLastName());
         foundUser.setEmail(user.getEmail());
-        foundUser.setPassword(user.getPassword());
+        foundUser.setPassword(passwordEncoder.passwordEncoder().encode(user.getPassword()));
         foundUser.setPhoneNumber(user.getPhoneNumber());
         foundUser.setAddress(user.getAddress());
 

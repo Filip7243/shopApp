@@ -25,7 +25,6 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public AppUser singUp(@RequestBody AppUserSaveUpdateDto registerRequest) {
-
         return null;
     }
 }
