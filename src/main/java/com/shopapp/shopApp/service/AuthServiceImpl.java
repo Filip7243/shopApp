@@ -27,6 +27,7 @@ public class AuthServiceImpl implements AuthService{
 
     private final AppUserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     @Override
     public JwtResponse signInUser(LoginRequest loginRequest) {
@@ -35,9 +36,9 @@ public class AuthServiceImpl implements AuthService{
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = JwtUtils.generateJwtAccessToken(authentication);
-        String refreshToken = JwtUtils.generateJwtRefreshToken(authentication);
-        String username = JwtUtils.getUsernameFromJwtToken(accessToken);
+        String accessToken = jwtUtils.generateJwtAccessToken(authentication);
+        String refreshToken = jwtUtils.generateJwtRefreshToken(authentication);
+        String username = jwtUtils.getUsernameFromJwtToken(accessToken);
 
         AppUser user = (AppUser) authentication.getPrincipal();
         List<String> authorities = user.getAuthorities().stream()
