@@ -27,6 +27,7 @@ public class ConfirmationToken {
     private String token;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
+    private Boolean isConfirmed;
     @ManyToOne
     @OnDelete(action = CASCADE)
     private AppUser user;
