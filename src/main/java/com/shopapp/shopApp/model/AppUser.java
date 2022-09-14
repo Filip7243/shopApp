@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
@@ -22,7 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppUser implements UserDetails {
+public class AppUser implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

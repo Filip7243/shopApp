@@ -26,7 +26,7 @@ public class AppUserMapper {
                 .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)
-                .isEnabled(true)
+                .isEnabled(true) // TODO: zmienic na false deafultowo
                 .build();
     }
 }
