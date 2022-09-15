@@ -49,7 +49,7 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/auth/signIn").permitAll();
         http.authorizeRequests().antMatchers("/api/auth/signUp").permitAll();
-        http.authorizeRequests().antMatchers("/api/auth/confirm").permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/confirm*").permitAll(); //TODO: i can remove it i think
 
         http.authorizeRequests().anyRequest().authenticated();
 

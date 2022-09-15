@@ -8,6 +8,7 @@ import com.shopapp.shopApp.mapper.AppUserMapper;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
+import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class AuthServiceImpl implements AuthService{
     private final EmailValidator emailValidator;
     private final EmailSenderImpl emailSender;
     private final ConfirmationTokenServiceImpl confirmationTokenService;
+    private final CustomPasswordEncoder passwordEncoder;
 
     @Override
     public JwtResponse signInUser(LoginRequest loginRequest) {
@@ -94,6 +96,7 @@ public class AuthServiceImpl implements AuthService{
         String link = "http://localhost:8080/api/auth/confirm?token=" + confirmationToken.getToken();
         emailSender.sendEmail(email, buildEmail(fullName, link));
 
+        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
         return newUser;
     }
