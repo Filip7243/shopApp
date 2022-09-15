@@ -5,6 +5,10 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
 import com.shopapp.shopApp.service.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,29 +20,51 @@ public class AppUserController {
 
     private final AppUserServiceImpl userService;
     @GetMapping("/all")//TODO: make dto to display less specific userinfo
-    public List<AppUser> getUsers() {
-        return userService.getUsers();
+    public ResponseEntity<List<AppUser>> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @PostMapping("/save")
-    public void saveUser(@RequestBody AppUserSaveUpdateDto user) {
-        userService.saveUser(user);
+    public ResponseEntity<?> saveUser(@RequestBody AppUserSaveUpdateDto user) {
+        try {
+            userService.saveUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body("USER CREATED");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/delete/{userCode}")
-    public void deleteUserWithUserCode(@PathVariable String userCode) {
-        userService.deleteUserWithUserCode(userCode);
+    public ResponseEntity<?> deleteUserWithUserCode(@PathVariable String userCode) {
+        try {
+            userService.deleteUserWithUserCode(userCode);
+            return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/update/{userCode}")
-    public void updateUser(@PathVariable String userCode,
+    public ResponseEntity<?> updateUser(@PathVariable String userCode,
                            @RequestBody AppUserSaveUpdateDto user) {
-        userService.updateUser(userCode, user);
+        try {
+            userService.updateUser(userCode, user);
+            return ResponseEntity.ok("UPDATED");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/roles/add")
-    public void addRoleToUser(@RequestParam String userCode, @RequestParam String roleName) {
-        userService.addRoleToUser(userCode, roleName);
+    public ResponseEntity<?> addRoleToUser(@RequestParam String userCode, @RequestParam String roleName) {
+        try {
+            userService.addRoleToUser(userCode, roleName);
+            return ResponseEntity.ok("ADDED ROLE TO USER");
+        } catch (UsernameNotFoundException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

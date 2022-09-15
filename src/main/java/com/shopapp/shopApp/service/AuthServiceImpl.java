@@ -54,9 +54,6 @@ public class AuthServiceImpl implements AuthService{
         List<String> authorities = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toList();
 
-        log.info("accessToken " + accessToken);
-        log.info("refreshToken " + refreshToken);
-
         return new JwtResponse(
                 username,
                 accessToken,
