@@ -1,6 +1,8 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleExistsException;
+import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
@@ -22,7 +24,7 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
     public void saveRole(AppUserRole role) {
         String name = role.getName();
         if (roleRepository.existsByName(name)) {
-            throw new IllegalStateException("There is a role with this name already");
+            throw new RoleExistsException("There is a role with name: " + name + " already!");
         }
         roleRepository.save(role);
     }
@@ -30,19 +32,19 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
     @Override
     public void deleteRoleWithName(String name) {
         AppUserRole role = roleRepository.findAppUserRoleByName(name)
-                .orElseThrow(() -> new IllegalStateException("There is no role with name"));
+                .orElseThrow(() -> new RoleNotFoundException("There is no role with name"));
         roleRepository.delete(role);
     }
 
     @Override
     public void updateRole(String roleName, AppUserRoleSaveUpdateDto role) {
-        if (roleRepository.existsByName(roleName)) {
+        if (roleRepository.existsByName(roleName)) { // TODO: maybe change this
             AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).orElseThrow();
             foundRole.setName(role.getName());
             foundRole.setDescription(role.getDescription());
             roleRepository.save(foundRole);
         } else {
-            throw new IllegalStateException("There is no role with name: " + roleName);
+            throw new RoleNotFoundException("There is no role with name: " + roleName);
         }
     }
 }

@@ -2,6 +2,11 @@ package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
+import com.shopapp.shopApp.exception.user.BadEmailException;
+import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
@@ -30,17 +35,19 @@ public class AuthController {
         try {
             authService.signUpUser(registerRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body("User with username" + registerRequest.getEmail() + " registered");
-        } catch (IllegalStateException e) {
+        } catch (UserExistsException | BadEmailException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @GetMapping("/confirm")
     public ResponseEntity<?> confirmToken(@RequestParam("token") String token) {
         try {
             ConfirmationToken foundToken = tokenService.getToken(token);
             tokenService.confirmEmail(foundToken);
             return ResponseEntity.ok("CONFIRMED!");
-        } catch (IllegalStateException e) {
+        } catch (ConfirmationTokenNotFoundException | ConfirmationTokenExpiredException |
+                 ConfirmationTokenConfirmedException e) {
             return ResponseEntity.status(HttpStatus.GONE).body(e.getMessage());
         }
     }

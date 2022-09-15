@@ -1,6 +1,8 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleNotFoundException;
+import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -31,16 +33,6 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         return userRepository.findAll();
     }
 
-    public AppUser getUserWithEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
-    }
-
-    public AppUser getUserWithUserCode(String userCode) {
-        return userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -51,7 +43,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     public void saveUser(AppUserSaveUpdateDto user) {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalStateException("This user already exists");
+            throw new UserExistsException("User with email: " + email + " already exists.");
         }
         AppUser newUser = mapToAppUser(null, user);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
@@ -60,8 +52,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 
     @Override
     public void deleteUserWithUserCode(String userCode) {
-        AppUser user = userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
+        AppUser user = getUserWithUserCode(userCode);
         userRepository.delete(user);
     }
 
@@ -81,10 +72,14 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     //TODO: ogarnąć czy nie lepszym pomysłem nie byłoby usunięcie fileda roles i doawanie bezpośrednio o authorities
     @Override
     public void addRoleToUser(String userCode, String roleName) {
-        AppUser appUser = userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
-        AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new IllegalStateException("No role with name: " + roleName));
+        AppUser appUser = getUserWithUserCode(userCode);
+        AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new RoleNotFoundException("No role with name: " + roleName));
         appUser.getRoles().add(role);
         userRepository.save(appUser);
+    }
+
+    private AppUser getUserWithUserCode(String userCode) {
+        return userRepository.findByUserCode(userCode)
+                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
     }
 }

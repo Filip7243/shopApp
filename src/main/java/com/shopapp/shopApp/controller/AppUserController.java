@@ -2,6 +2,8 @@ package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleNotFoundException;
+import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
 import com.shopapp.shopApp.service.AppUserServiceImpl;
@@ -36,7 +38,7 @@ public class AppUserController {
         try {
             userService.saveUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("USER CREATED");
-        } catch (IllegalStateException e) {
+        } catch (UserExistsException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
@@ -68,7 +70,7 @@ public class AppUserController {
         try {
             userService.addRoleToUser(userCode, roleName);
             return ResponseEntity.ok("ADDED ROLE TO USER");
-        } catch (UsernameNotFoundException | IllegalStateException e) {
+        } catch (UsernameNotFoundException | RoleNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

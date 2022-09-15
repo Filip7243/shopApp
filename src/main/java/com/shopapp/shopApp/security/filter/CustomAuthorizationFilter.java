@@ -30,7 +30,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     //TODO: email and register
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         try {
             log.info("PATH: " + request.getServletPath());
@@ -44,7 +45,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 if(token != null) {
 
                     String username = jwtUtils.getUsernameFromJwtToken(token);
-                    AppUser user = userService.getUserWithEmail(username);
+                    AppUser user = (AppUser) userService.loadUserByUsername(username);
 
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             username, null, user.getAuthorities()

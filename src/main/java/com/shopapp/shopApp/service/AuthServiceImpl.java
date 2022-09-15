@@ -4,6 +4,8 @@ import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
 import com.shopapp.shopApp.email.EmailValidator;
+import com.shopapp.shopApp.exception.user.BadEmailException;
+import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.mapper.AppUserMapper;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
@@ -69,11 +71,11 @@ public class AuthServiceImpl implements AuthService{
         String email = registerRequest.getEmail();
 
         if(userRepository.existsByEmail(email)) {
-            throw new IllegalStateException("There is a user with email");
+            throw new UserExistsException("There is a user with email");
         }
 
         if(!emailValidator.test(email)) {
-            throw new IllegalStateException("Bad email");
+            throw new BadEmailException("Bad email");
         }
 
         AppUser newUser = AppUserMapper.mapToAppUser(null, registerRequest);

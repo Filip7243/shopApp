@@ -1,5 +1,8 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -44,15 +47,15 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
 
         //TODO: it might be deleted
         if(!tokenRepository.existsByToken(confirmationToken.getToken())) {
-            throw new IllegalStateException("There is no token at db like this");
+            throw new ConfirmationTokenNotFoundException("There is no token at db like this");
         }
 
         if(confirmationToken.getIsConfirmed()) {
-            throw new IllegalStateException("Token already confirmed");
+            throw new ConfirmationTokenConfirmedException("Token already confirmed");
         }
 
         if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("Confirmation token expired");
+            throw new ConfirmationTokenExpiredException("Confirmation token expired");
         }
 
         confirmationToken.setIsConfirmed(true);
