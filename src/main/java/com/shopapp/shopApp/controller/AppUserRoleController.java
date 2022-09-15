@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.shopapp.shopApp.mapper.AppUserRoleMapper.mapToAppUserRole;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/roles")
@@ -24,8 +26,7 @@ public class AppUserRoleController {
     @PostMapping("/add")
     public ResponseEntity<?> addRole(@RequestBody AppUserRoleSaveUpdateDto role) {
         try {
-            AppUserRole newRole = new AppUserRole(null, role.getName(), role.getDescription()); //TODO: mapper
-            roleService.saveRole(newRole);
+            roleService.saveRole(mapToAppUserRole(role));
             return ResponseEntity.ok("CREATED");
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

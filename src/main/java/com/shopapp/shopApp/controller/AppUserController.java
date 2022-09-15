@@ -25,7 +25,7 @@ public class AppUserController {
 
     private final AppUserServiceImpl userService;
 
-    @GetMapping("/all")//TODO: make dto to display less specific userinfo
+    @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
         List<AppUserDisplayDto> users = mapToAppUserDisplayDto(userService.getUsers());
         return ResponseEntity.ok(users);
