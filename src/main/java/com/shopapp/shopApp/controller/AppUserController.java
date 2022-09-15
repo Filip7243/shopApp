@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
@@ -11,7 +12,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUserDisplayDto;
 
 @RestController
 @AllArgsConstructor
@@ -19,9 +24,11 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserServiceImpl userService;
+
     @GetMapping("/all")//TODO: make dto to display less specific userinfo
-    public ResponseEntity<List<AppUser>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+    public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
+        List<AppUserDisplayDto> users = mapToAppUserDisplayDto(userService.getUsers());
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/save")
@@ -47,14 +54,13 @@ public class AppUserController {
 
     @PutMapping("/update/{userCode}")
     public ResponseEntity<?> updateUser(@PathVariable String userCode,
-                           @RequestBody AppUserSaveUpdateDto user) {
+                                        @RequestBody AppUserSaveUpdateDto user) {
         try {
             userService.updateUser(userCode, user);
             return ResponseEntity.ok("UPDATED");
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
     @PostMapping("/roles/add")

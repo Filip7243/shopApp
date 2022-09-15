@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.mapper;
 
+import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
@@ -7,8 +8,11 @@ import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class AppUserMapper {
 
@@ -31,4 +35,19 @@ public class AppUserMapper {
                 .isEnabled(true) // TODO: zmienic na false deafultowo
                 .build();
     }
+
+    public static List<AppUserDisplayDto> mapToAppUserDisplayDto(List<AppUser> users) {
+        List<AppUserDisplayDto> displayDto = new ArrayList<>();
+        users.stream().map(user -> displayDto.add(
+                new AppUserDisplayDto(user.getName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getAddress(),
+                        user.getUserCode(),
+                        user.getRoles())
+        )).collect(Collectors.toList());
+        return displayDto;
+    }
+
 }
