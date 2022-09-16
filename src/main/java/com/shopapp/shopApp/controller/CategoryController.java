@@ -57,5 +57,4 @@ public class CategoryController {
             return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
         }
     }
-    //TODO: test endpoints
 }

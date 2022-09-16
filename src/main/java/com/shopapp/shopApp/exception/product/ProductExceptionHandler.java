@@ -22,4 +22,16 @@ public class ProductExceptionHandler {
         ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(details, details.status());
     }
+
+    @ExceptionHandler(ProductExistsException.class)
+    public ResponseEntity<Object> handleProductExistsException(ProductExistsException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
 }

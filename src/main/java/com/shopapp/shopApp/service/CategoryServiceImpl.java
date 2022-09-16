@@ -41,7 +41,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public void deleteCategoryWithId(Long id) {
-        if(categoryRepository.existsById(id)) {
+        if(categoryRepository.existsById(id)) { //TODO: change this like it is in update and create private method
             categoryRepository.deleteById(id);
         } else {
             throw new CategoryNotFoundException("Category not found");
