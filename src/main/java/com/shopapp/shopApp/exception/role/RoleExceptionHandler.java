@@ -1,13 +1,9 @@
 package com.shopapp.shopApp.exception.role;
 
 import com.shopapp.shopApp.exception.ExceptionDetails;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 import static com.shopapp.shopApp.exception.ExceptionDetails.createDetails;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

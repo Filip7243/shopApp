@@ -69,7 +69,6 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         userRepository.save(foundUser);
     }
 
-    //TODO: ogarnąć czy nie lepszym pomysłem nie byłoby usunięcie fileda roles i doawanie bezpośrednio o authorities
     @Override
     public void addRoleToUser(String userCode, String roleName) {
         AppUser appUser = getUserWithUserCode(userCode);
