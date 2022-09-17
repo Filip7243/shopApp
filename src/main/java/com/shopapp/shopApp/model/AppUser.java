@@ -5,10 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -38,6 +35,8 @@ public class AppUser implements UserDetails, Serializable {
     private String address;
     @OneToMany(fetch = EAGER, cascade = ALL)
     private Set<AppUserRole> roles;
+    @OneToOne(mappedBy = "user", targetEntity = ShoppingCart.class)
+    private ShoppingCart shoppingCart;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
     private Boolean isExpired;
@@ -78,5 +77,13 @@ public class AppUser implements UserDetails, Serializable {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }

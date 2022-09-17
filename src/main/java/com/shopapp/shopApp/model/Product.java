@@ -13,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product implements Serializable {
+public class Product  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

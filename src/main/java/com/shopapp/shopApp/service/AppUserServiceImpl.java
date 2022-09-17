@@ -40,7 +40,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     }
 
     @Override
-    public void saveUser(AppUserSaveUpdateDto user) {
+    public AppUser saveUser(AppUserSaveUpdateDto user) {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new UserExistsException("User with email: " + email + " already exists.");
@@ -48,6 +48,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser newUser = mapToAppUser(null, user);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
+        return newUser;
     }
 
     @Override

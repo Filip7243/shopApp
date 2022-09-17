@@ -34,4 +34,22 @@ public class ProductExceptionHandler {
         ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(details, details.status());
     }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Object> handleCartItemNotFoundException(CartItemNotFoundException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
+
+    @ExceptionHandler(ShoppingCartNotFoundException.class)
+    public ResponseEntity<Object> handleShoppingCartNotFoundException(ShoppingCartNotFoundException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
+
+    @ExceptionHandler(NotEnoughInStockException.class)
+    public ResponseEntity<Object> handleNotEnoughInStockException(NotEnoughInStockException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
 }
