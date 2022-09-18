@@ -36,8 +36,6 @@ public class ShoppingCartController {
         }
     }
 
-    //TODO: test shopping cart controller
-
     @PostMapping("/user/add")
     public ResponseEntity<?> addUserToShoppingCart(@RequestParam String shoppingCartCode, @RequestParam String appUserCode) {
         try {

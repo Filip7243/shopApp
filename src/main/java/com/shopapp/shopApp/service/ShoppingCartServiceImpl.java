@@ -1,6 +1,7 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.constants.ExceptionsConstants;
+import com.shopapp.shopApp.exception.product.CartItemNotFoundException;
 import com.shopapp.shopApp.exception.product.NotEnoughInStockException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
@@ -60,7 +61,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public List<CartItem> getItemsFromShoppingCart(String shoppingCartCode) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));//TODO: const for exceptions
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
         return shoppingCart.getItems();
     }
 
@@ -101,7 +102,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     public void deleteItemFromShoppingCart(String shoppingCartCode, Long itemId) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
-        shoppingCart.getItems().remove(cartItemRepository.findById(itemId).orElseThrow()); //TODO: better handle it
+        CartItem item = cartItemRepository.findById(itemId)
+                .orElseThrow(() -> new CartItemNotFoundException(CART_ITEM_NOT_FOUND));
+        shoppingCart.getItems().remove(item);
         itemService.deleteCartItem(itemId);
         cartRepository.save(shoppingCart);
     }

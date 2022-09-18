@@ -32,7 +32,7 @@ public class AppUserMapper {
                 .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)
-                .isEnabled(true) // TODO: zmienic na false deafultowo
+                .isEnabled(false)
                 .build();
     }
 

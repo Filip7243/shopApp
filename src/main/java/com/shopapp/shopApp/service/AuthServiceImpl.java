@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public AppUser signUpUser(AppUserSaveUpdateDto registerRequest) {
-        //TODO: make own exceptions
+
         String email = registerRequest.getEmail();
 
         if(userRepository.existsByEmail(email)) {

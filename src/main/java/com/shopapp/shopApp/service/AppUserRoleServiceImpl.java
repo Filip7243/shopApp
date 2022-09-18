@@ -42,7 +42,7 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
 
     @Override
     public void updateRole(String roleName, AppUserRoleSaveUpdateDto role) {
-        if (roleRepository.existsByName(roleName)) { // TODO: maybe change this
+        if (roleRepository.existsByName(roleName)) {
             AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).get();
             foundRole.setName(role.getName());
             foundRole.setDescription(role.getDescription());
