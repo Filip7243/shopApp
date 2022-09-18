@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.CategorySaveUpdateDto;
 import com.shopapp.shopApp.exception.product.CategoryExistsException;
 import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
@@ -9,6 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.CATEGORY_ALREADY_EXISTS;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.CATEGORY_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService{
     public void addCategory(Category category) {
         String name = category.getCategoryName();
         if(categoryRepository.existsByCategoryName(name)) {
-            throw new CategoryExistsException("Category with name: " + name + " exists");
+            throw new CategoryExistsException(String.format(CATEGORY_ALREADY_EXISTS, category.getCategoryName()));
         }
         categoryRepository.save(category);
     }
@@ -32,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void updateCategory(Long id, CategorySaveUpdateDto category) {
         Category foundCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name: " + category.getCategoryName() + " not found"));
+                .orElseThrow(() -> new CategoryNotFoundException(String.format(CATEGORY_ALREADY_EXISTS, category.getCategoryName())));
         foundCategory.setCategoryName(category.getCategoryName());
         foundCategory.setDescription(category.getDescription());
         foundCategory.setImageUrl(category.getImageUrl());
@@ -44,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService{
         if(categoryRepository.existsById(id)) { //TODO: change this like it is in update and create private method
             categoryRepository.deleteById(id);
         } else {
-            throw new CategoryNotFoundException("Category not found");
+            throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND, "with id: " + id));
         }
     }
 }

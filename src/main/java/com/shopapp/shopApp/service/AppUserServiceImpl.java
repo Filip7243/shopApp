@@ -1,8 +1,11 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
+import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUser;
 
 @Service
@@ -36,14 +40,14 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with email: " + email));
+                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, email)));
     }
 
     @Override
     public AppUser saveUser(AppUserSaveUpdateDto user) {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
-            throw new UserExistsException("User with email: " + email + " already exists.");
+            throw new UserExistsException(String.format(USER_ALREADY_EXISTS, email));
         }
         AppUser newUser = mapToAppUser(null, user);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
@@ -73,13 +77,14 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     @Override
     public void addRoleToUser(String userCode, String roleName) {
         AppUser appUser = getUserWithUserCode(userCode);
-        AppUserRole role = roleRepository.findAppUserRoleByName(roleName).orElseThrow(() -> new RoleNotFoundException("No role with name: " + roleName));
+        AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
         appUser.getRoles().add(role);
         userRepository.save(appUser);
     }
 
     private AppUser getUserWithUserCode(String userCode) {
         return userRepository.findByUserCode(userCode)
-                .orElseThrow(() -> new UsernameNotFoundException("There is no user with userCode: " + userCode));
+                .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, userCode)));
     }
 }

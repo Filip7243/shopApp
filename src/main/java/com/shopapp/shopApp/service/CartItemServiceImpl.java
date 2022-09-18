@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.CartItemNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.model.CartItem;
@@ -8,6 +9,9 @@ import com.shopapp.shopApp.repository.CartItemRepository;
 import com.shopapp.shopApp.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.CART_ITEM_NOT_FOUND;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.PRODUCT_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -30,13 +34,13 @@ public class CartItemServiceImpl implements CartItemService{
             return item;
         }
 
-        throw new ProductNotFoundException("Product not found");
+        throw new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, product.getName()));
     }
 
     @Override
     public void deleteCartItem(Long id) {
         CartItem foundItem = itemRepository.findById(id)
-                .orElseThrow(() -> new CartItemNotFoundException("Item not found!"));
+                .orElseThrow(() -> new CartItemNotFoundException(CART_ITEM_NOT_FOUND));
         itemRepository.delete(foundItem);
     }
 }

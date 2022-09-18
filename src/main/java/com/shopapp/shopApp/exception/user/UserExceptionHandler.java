@@ -33,4 +33,10 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(details, details.status());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), BAD_REQUEST);
+        return new ResponseEntity<>(details, details.status());
+    }
+
 }

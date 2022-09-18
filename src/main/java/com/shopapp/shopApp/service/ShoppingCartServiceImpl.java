@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.NotEnoughInStockException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 
 @Service
 @AllArgsConstructor
@@ -42,9 +45,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public void addUserToShoppingCart(String shoppingCartCode, String appUserCode) {
         AppUser user = userRepository.findByUserCode(appUserCode)
-                .orElseThrow(() -> new UserCodeNotFoundException("User NO FOUND"));
+                .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, appUserCode)));
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException("Can't find shopping cart"));
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
 
         if(user.getShoppingCart() != null) {
             throw new IllegalStateException("User already have shoppingCart");
@@ -57,21 +60,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public List<CartItem> getItemsFromShoppingCart(String shoppingCartCode) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException("Can't find shopping cart"));//TODO: const for exceptions
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));//TODO: const for exceptions
         return shoppingCart.getItems();
     }
 
     @Override
     public void addItemToShoppingCart(String shoppingCartCode, String productCode, Integer quantity) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException("Can't find shopping cart"));
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
         Product product = productRepository.findByProductCode(productCode)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
 
         CartItem item = itemService.createCartItem(product);
 
         if(quantity > item.getProduct().getInStock()) {
-            throw new NotEnoughInStockException("Not Enough in Stock!");
+            throw new NotEnoughInStockException(NOT_ENOUGH_IN_STOCK);
         }
 
         List<CartItem> items = shoppingCart.getItems();
@@ -97,7 +100,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
     @Override
     public void deleteItemFromShoppingCart(String shoppingCartCode, Long itemId) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException("Can't find shopping cart"));
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
         shoppingCart.getItems().remove(cartItemRepository.findById(itemId).orElseThrow()); //TODO: better handle it
         itemService.deleteCartItem(itemId);
         cartRepository.save(shoppingCart);

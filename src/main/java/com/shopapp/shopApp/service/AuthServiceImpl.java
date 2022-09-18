@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
@@ -26,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.BAD_EMAIL;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_ALREADY_EXISTS;
 
 @Slf4j
 @Service
@@ -71,11 +75,11 @@ public class AuthServiceImpl implements AuthService{
         String email = registerRequest.getEmail();
 
         if(userRepository.existsByEmail(email)) {
-            throw new UserExistsException("There is a user with email");
+            throw new UserExistsException(String.format(USER_ALREADY_EXISTS, email));
         }
 
         if(!emailValidator.test(email)) {
-            throw new BadEmailException("Bad email");
+            throw new BadEmailException(String.format(BAD_EMAIL, email));
         }
 
         AppUser newUser = AppUserMapper.mapToAppUser(null, registerRequest);

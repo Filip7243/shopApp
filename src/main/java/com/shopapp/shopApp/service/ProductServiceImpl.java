@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +30,7 @@ public class ProductServiceImpl implements ProductService{
     public void addProduct(Product product) {
         String productCode = product.getProductCode();
         if(productRepository.existsByProductCode(productCode)) {
-            throw new ProductExistsException("Product with code: " + productCode + " exists");
+            throw new ProductExistsException(String.format(PRODUCT_ALREADY_EXISTS, product.getName()));
         }
         productRepository.save(product);
     }
@@ -54,7 +57,7 @@ public class ProductServiceImpl implements ProductService{
     public void addCategoryToProduct(String productCode, String categoryName) {
         Product product = getProductWithProductCode(productCode);
         Category category = categoryRepository.findByCategoryName(categoryName)
-                .orElseThrow(() -> new CategoryNotFoundException("Category with name: " + categoryName + " not found"));
+                .orElseThrow(() -> new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND, categoryName)));
         product.setCategory(category);
 
         productRepository.save(product);
@@ -62,6 +65,6 @@ public class ProductServiceImpl implements ProductService{
 
     private Product getProductWithProductCode(String productCode) {
         return productRepository.findByProductCode(productCode)
-                .orElseThrow(() -> new ProductNotFoundException("Product with code: " + productCode + " not found"));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
     }
 }

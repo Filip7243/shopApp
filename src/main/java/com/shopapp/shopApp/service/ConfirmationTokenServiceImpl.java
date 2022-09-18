@@ -1,8 +1,10 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -12,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -33,13 +38,13 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
     @Override
     public ConfirmationToken findByUser(AppUser appUser) {
         return tokenRepository.findByUser(appUser)
-                .orElseThrow(() -> new IllegalStateException("User doesn't exists"));
+                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, appUser.getName())));
     }
 
     @Override
     public ConfirmationToken getToken(String token) {
         return tokenRepository.findByToken(token)
-                .orElseThrow(() -> new IllegalStateException("There is no token"));
+                .orElseThrow(() -> new ConfirmationTokenNotFoundException(TOKEN_NOT_FOUND));
     }
 
     @Override
@@ -47,15 +52,15 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
 
         //TODO: it might be deleted
         if(!tokenRepository.existsByToken(confirmationToken.getToken())) {
-            throw new ConfirmationTokenNotFoundException("There is no token at db like this");
+            throw new ConfirmationTokenNotFoundException(TOKEN_NOT_FOUND);
         }
 
         if(confirmationToken.getIsConfirmed()) {
-            throw new ConfirmationTokenConfirmedException("Token already confirmed");
+            throw new ConfirmationTokenConfirmedException(String.format(TOKEN_CONFIRMED, confirmationToken));
         }
 
         if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new ConfirmationTokenExpiredException("Confirmation token expired");
+            throw new ConfirmationTokenExpiredException(String.format(TOKEN_EXPIRED, confirmationToken.getExpiresAt().toString()));
         }
 
         confirmationToken.setIsConfirmed(true);

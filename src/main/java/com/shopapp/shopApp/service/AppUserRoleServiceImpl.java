@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
@@ -9,6 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.ROLE_ALREADY_EXISTS;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.ROLE_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -24,27 +28,27 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
     public void saveRole(AppUserRole role) {
         String name = role.getName();
         if (roleRepository.existsByName(name)) {
-            throw new RoleExistsException("There is a role with name: " + name + " already!");
+            throw new RoleExistsException(String.format(ROLE_ALREADY_EXISTS, role.getName()));
         }
         roleRepository.save(role);
     }
 
     @Override
-    public void deleteRoleWithName(String name) {
-        AppUserRole role = roleRepository.findAppUserRoleByName(name)
-                .orElseThrow(() -> new RoleNotFoundException("There is no role with name"));
+    public void deleteRoleWithName(String roleName) {
+        AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
         roleRepository.delete(role);
     }
 
     @Override
     public void updateRole(String roleName, AppUserRoleSaveUpdateDto role) {
         if (roleRepository.existsByName(roleName)) { // TODO: maybe change this
-            AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).orElseThrow();
+            AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).get();
             foundRole.setName(role.getName());
             foundRole.setDescription(role.getDescription());
             roleRepository.save(foundRole);
         } else {
-            throw new RoleNotFoundException("There is no role with name: " + roleName);
+            throw new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName));
         }
     }
 }
