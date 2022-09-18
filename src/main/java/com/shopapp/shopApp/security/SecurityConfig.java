@@ -24,6 +24,7 @@ public class SecurityConfig {
     private final AppUserServiceImpl userService;
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final CustomLogoutHandler logoutHandler;
 
     @Bean
     public CustomAuthorizationFilter authorizationFilter() {
@@ -55,6 +56,9 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.logout().logoutSuccessHandler(logoutHandler)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/api/auth/signIn");
 
         return http.build();
     }
