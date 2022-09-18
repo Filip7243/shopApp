@@ -18,5 +18,6 @@ public class CustomLogoutHandler extends SimpleUrlLogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         response.setHeader(AUTHORIZATION, "");
+        super.onLogoutSuccess(request, response, authentication);
     }
 }
