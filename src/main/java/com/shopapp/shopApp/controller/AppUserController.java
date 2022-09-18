@@ -1,20 +1,31 @@
 package com.shopapp.shopApp.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.model.AppUser;
+import com.shopapp.shopApp.security.jwt.JwtResponse;
+import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
 import com.shopapp.shopApp.service.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +37,8 @@ import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUserDisplayDto;
 public class AppUserController {
 
     private final AppUserServiceImpl userService;
+    private final JwtUtils jwtUtils;
+    private final Environment env;
 
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
@@ -73,6 +86,18 @@ public class AppUserController {
         } catch (UsernameNotFoundException | RoleNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/accessToken/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        String refreshToken = jwtUtils.getTokenFromHeader(request);
+        if (refreshToken != null) {
+            String username = jwtUtils.getUsernameFromJwtToken(refreshToken);
+            AppUser user = (AppUser) userService.loadUserByUsername(username);
+
+            return ResponseEntity.ok(jwtUtils.refreshAccessToken(refreshToken, user));
+        }
+        return ResponseEntity.badRequest().body("Could not refresh the token!");
     }
 
 }

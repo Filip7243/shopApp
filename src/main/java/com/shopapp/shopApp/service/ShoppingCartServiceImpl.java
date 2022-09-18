@@ -16,6 +16,7 @@ import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.ShoppingCartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -23,6 +24,7 @@ import java.util.*;
 import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService{
 

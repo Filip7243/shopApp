@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService{
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = jwtUtils.generateJwtAccessToken(authentication);

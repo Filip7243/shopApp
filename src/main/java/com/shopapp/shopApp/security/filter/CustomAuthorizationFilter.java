@@ -40,7 +40,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     || request.getServletPath().equals("/api/auth/confirm")) { //TODO: refresh token
                 filterChain.doFilter(request, response);
             } else {
-                String token = getTokenFromHeader(request);
+                String token = jwtUtils.getTokenFromHeader(request);
                 if(token != null) {
 
                     String username = jwtUtils.getUsernameFromJwtToken(token);
@@ -60,11 +60,4 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    private String getTokenFromHeader(HttpServletRequest request) {
-        String authHeader = request.getHeader(AUTHORIZATION);
-        if (StringUtils.hasText("Bearer ") && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring("Bearer ".length());
-        }
-        return null;
-    }
 }

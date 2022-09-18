@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.auth0.jwt.JWT;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
@@ -7,19 +8,25 @@ import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
 import com.shopapp.shopApp.exception.user.BadEmailException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
-import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
+import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.AuthServiceImpl;
 import com.shopapp.shopApp.service.ConfirmationTokenServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 @RestController
-@RequestMapping("/api/auth")
 @AllArgsConstructor
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthServiceImpl authService;
@@ -46,9 +53,11 @@ public class AuthController {
             ConfirmationToken foundToken = tokenService.getToken(token);
             tokenService.confirmEmail(foundToken);
             return ResponseEntity.ok("CONFIRMED!");
-        } catch (ConfirmationTokenNotFoundException | ConfirmationTokenExpiredException |
+        } catch (ConfirmationTokenNotFoundException |
+                 ConfirmationTokenExpiredException |
                  ConfirmationTokenConfirmedException e) {
             return ResponseEntity.status(HttpStatus.GONE).body(e.getMessage());
         }
     }
+
 }

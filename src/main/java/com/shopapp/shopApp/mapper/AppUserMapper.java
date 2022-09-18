@@ -32,7 +32,7 @@ public class AppUserMapper {
                 .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)
-                .isEnabled(false)
+                .isEnabled(true)
                 .build();
     }
 
