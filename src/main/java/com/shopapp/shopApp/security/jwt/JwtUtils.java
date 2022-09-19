@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtUtils {
 
     private String secret;
+    private final List<String> blockedTokens = new ArrayList<>();
 
     @Value("${jwt.token.secret}")
     private void setSecret(String secret) {
@@ -53,8 +55,6 @@ public class JwtUtils {
         AppUser user = (AppUser) authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC512(secret.getBytes());
 
-        log.info("Generating refresh token");
-
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuer("issuer")
@@ -74,7 +74,7 @@ public class JwtUtils {
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTHORIZATION);
-        if (StringUtils.hasText("Bearer ") && authHeader.startsWith("Bearer ")) {
+        if (StringUtils.hasText("Bearer ") && authHeader.startsWith("Bearer ") && blockedTokens.contains(authHeader)) {
             return authHeader.substring("Bearer ".length());
         }
         return null;
@@ -103,7 +103,12 @@ public class JwtUtils {
                 accessToken,
                 refreshToken,
                 user.getUserCode(),
-                authorities);
+                authorities
+        );
+    }
+
+    public void addToBlackList(String token) {
+        this.blockedTokens.add(token);
     }
 
     private DecodedJWT decodeJwt(String token) {

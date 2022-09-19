@@ -3,6 +3,7 @@ package com.shopapp.shopApp.security.jwt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -16,6 +17,5 @@ public class JwtResponse {
     private String refreshToken;
     private String userCode;
     private List<String> authorities;
-
 
 }

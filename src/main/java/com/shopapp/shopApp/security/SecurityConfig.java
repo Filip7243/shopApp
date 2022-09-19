@@ -1,6 +1,7 @@
 package com.shopapp.shopApp.security;
 
 import com.shopapp.shopApp.security.filter.CustomAuthorizationFilter;
+import com.shopapp.shopApp.security.handler.CustomLogoutHandler;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
@@ -9,9 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -42,7 +41,6 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder.passwordEncoder());
         return authenticationProvider;
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -56,9 +54,11 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.logout().logoutSuccessHandler(logoutHandler)
+        http.formLogin();
+        http.logout()
+                .logoutSuccessHandler(logoutHandler)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/api/auth/signIn");
+                .clearAuthentication(true);
 
         return http.build();
     }
