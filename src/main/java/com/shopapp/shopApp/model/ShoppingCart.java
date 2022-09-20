@@ -32,7 +32,7 @@ public class ShoppingCart {
     @JsonIgnore // i don't want to display info about user from shopping cart
     @OneToOne(fetch = EAGER, targetEntity = AppUser.class)
     private AppUser user;
-    @OneToMany(fetch = LAZY)
+    @OneToMany(fetch = EAGER)
     private List<CartItem> items;
     private LocalDateTime createdAt;
     private Double totalPrice;

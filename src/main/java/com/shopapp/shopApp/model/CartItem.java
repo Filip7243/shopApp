@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -24,6 +25,6 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer quantity;
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     private Product product;
 }

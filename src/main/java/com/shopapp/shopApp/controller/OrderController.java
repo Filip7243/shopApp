@@ -1,9 +1,12 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.dto.OrderResponse;
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.exception.order.OrderNotFoundException;
-import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
+import com.shopapp.shopApp.model.AppUser;
+import com.shopapp.shopApp.model.ShoppingCart;
 import com.shopapp.shopApp.model.UserOrder;
+import com.shopapp.shopApp.service.AppUserServiceImpl;
 import com.shopapp.shopApp.service.OrderServiceImpl;
 import com.shopapp.shopApp.service.ShoppingCartServiceImpl;
 import lombok.AllArgsConstructor;
@@ -20,15 +23,28 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
     private final ShoppingCartServiceImpl shoppingCartService;
+    private final AppUserServiceImpl appUserService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createOrder(@RequestParam String shoppingCartCode) {
+    public ResponseEntity<OrderResponse> createOrder(@RequestParam String shoppingCartCode) {
         try {
-            orderService.createOrder(shoppingCartService.getShoppingCart(shoppingCartCode));
-            return ResponseEntity.status(CREATED).body("Order created!");
+            ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(shoppingCartCode);
+            orderService.createOrder(shoppingCart);
+            AppUser user = shoppingCart.getUser();
+            return ResponseEntity.status(CREATED)
+                    .body(new OrderResponse(
+                            user.getName(),
+                            user.getLastName(),
+                            user.getPhoneNumber(),
+                            user.getAddress(),
+                            user.getEmail(),
+                            shoppingCart.getItems().stream().toList(),
+                            shoppingCart.getTotalPrice()
+                    ));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            System.out.println(e.getMessage());
         }
+        return null;
     }
 
     @PutMapping("/update")

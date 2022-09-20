@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -24,6 +25,6 @@ public class Product  {
     private Double price;
     private Integer inStock;
     private String imageUrl;
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     private Category category;
 }
