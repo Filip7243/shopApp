@@ -19,6 +19,7 @@ public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String wishListCode;
     @OneToMany(fetch = EAGER)
     private Set<Product> wishListItems;
     @OneToOne

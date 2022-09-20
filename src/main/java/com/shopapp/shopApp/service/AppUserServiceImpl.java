@@ -83,7 +83,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         userRepository.save(appUser);
     }
 
-    private AppUser getUserWithUserCode(String userCode) {
+    public AppUser getUserWithUserCode(String userCode) {
         return userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, userCode)));
     }

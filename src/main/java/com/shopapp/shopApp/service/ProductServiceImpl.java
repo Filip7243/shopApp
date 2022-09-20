@@ -63,7 +63,7 @@ public class ProductServiceImpl implements ProductService{
         productRepository.save(product);
     }
 
-    private Product getProductWithProductCode(String productCode) {
+    public Product getProductWithProductCode(String productCode) {
         return productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
     }
