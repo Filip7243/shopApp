@@ -17,6 +17,6 @@ public class OrderResponse {
     private String phoneNumber;
     private String address;
     private String email;
-    private List<CartItem> items;
+    private List<CartItemDto> items;
     private Double totalPrice;
 }
