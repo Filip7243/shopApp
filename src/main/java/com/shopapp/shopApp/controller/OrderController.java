@@ -44,7 +44,7 @@ public class OrderController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return null; //TODO: complete order (when ui)
     }
 
     @PutMapping("/update")

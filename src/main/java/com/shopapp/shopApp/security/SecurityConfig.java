@@ -19,7 +19,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-    //TODO: make order
+
     private final AppUserServiceImpl userService;
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;

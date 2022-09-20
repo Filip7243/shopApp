@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class OrderMapper {
-    //TODO: end orders
     //todo: FORMS FOR UI
     public static UserOrder mapToOrder(ShoppingCart shoppingCart) {
         return UserOrder.builder()
