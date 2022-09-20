@@ -1,6 +1,8 @@
 package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.ProductDisplayDto;
+import com.shopapp.shopApp.exception.product.ProductNotFoundException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.exception.wishlist.WishListNotFoundException;
 import com.shopapp.shopApp.mapper.ProductMapper;
 import com.shopapp.shopApp.model.AppUser;
@@ -35,7 +37,6 @@ public class WishListController {
     private final JwtUtils jwtUtils;
     private final AppUserServiceImpl userService;
 
-
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) {
         try {
@@ -61,6 +62,29 @@ public class WishListController {
             wishListService.addProductToWishList(wishListCode, productCode);
             return ResponseEntity.ok("Added item!");
         } catch (WishListNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteItem")
+    public ResponseEntity<?> deleteProductFromWishList(@RequestParam String wishListCode, @RequestParam String productCode) {
+        try {
+            wishListService.deleteProductFromWishList(wishListCode, productCode);
+            return ResponseEntity.ok("Product deleted from wishList");
+        } catch (WishListNotFoundException | ProductNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteWishList(HttpServletRequest request) {
+        try {
+            String token = jwtUtils.getTokenFromHeader(request);
+            String username = jwtUtils.getUsernameFromJwtToken(token);
+            AppUser user = (AppUser) userService.loadUserByUsername(username);
+            wishListService.deleteWishList(user);
+            return ResponseEntity.ok("WishList deleted!");
+        } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
