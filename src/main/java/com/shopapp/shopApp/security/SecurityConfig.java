@@ -19,7 +19,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-
+    //TODO: make order
     private final AppUserServiceImpl userService;
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
@@ -54,7 +54,6 @@ public class SecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.formLogin();
         http.logout()
                 .logoutSuccessHandler(logoutHandler)
                 .deleteCookies("JSESSIONID")

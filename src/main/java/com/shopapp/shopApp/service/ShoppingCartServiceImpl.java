@@ -110,4 +110,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
         itemService.deleteCartItem(itemId);
         cartRepository.save(shoppingCart);
     }
+
+    @Override
+    public ShoppingCart getShoppingCart(String shoppingCartCode) {
+        return cartRepository.findByShoppingCartCode(shoppingCartCode)
+                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
+    }
 }

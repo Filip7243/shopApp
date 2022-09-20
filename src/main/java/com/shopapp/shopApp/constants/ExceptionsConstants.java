@@ -31,4 +31,7 @@ public class ExceptionsConstants {
 
     // SHOPPING CART
     public static final String SHOPPING_CART_NOT_FOUND = "Shopping cart not found!";
+
+    // ORDER
+    public static final String ORDER_NOT_FOUND = "Order: %s not found!";
 }

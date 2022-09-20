@@ -74,7 +74,7 @@ public class JwtUtils {
 
     public String getTokenFromHeader(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTHORIZATION);
-        if (StringUtils.hasText("Bearer ") && authHeader.startsWith("Bearer ") && blockedTokens.contains(authHeader)) {
+        if (StringUtils.hasText("Bearer ") && authHeader.startsWith("Bearer ") && !blockedTokens.contains(authHeader)) {
             return authHeader.substring("Bearer ".length());
         }
         return null;

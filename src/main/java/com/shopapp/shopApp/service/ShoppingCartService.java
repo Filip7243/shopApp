@@ -1,11 +1,10 @@
 package com.shopapp.shopApp.service;
 
-import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.CartItem;
 import com.shopapp.shopApp.model.ShoppingCart;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 public interface ShoppingCartService {
 
@@ -18,4 +17,6 @@ public interface ShoppingCartService {
     void addItemToShoppingCart(String shoppingCartCode, String productCode, Integer quantity);
 
     void deleteItemFromShoppingCart(String shoppingCartCode, Long itemId);
+
+    ShoppingCart getShoppingCart(String shoppingCartCode);
 }
