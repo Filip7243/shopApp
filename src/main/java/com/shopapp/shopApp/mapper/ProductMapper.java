@@ -30,7 +30,7 @@ public class ProductMapper {
                 .build();
     }
 
-    public static Set<ProductDisplayDto> getProductsDto(Set<Product> products) {
+    public static Set<ProductDisplayDto> getSetOfProductsDto(Set<Product> products) {
         return products.stream()
                 .map(ProductMapper::mapToProductDisplayDto)
                 .collect(Collectors.toSet());

@@ -4,27 +4,20 @@ import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.exception.wishlist.WishListNotFoundException;
-import com.shopapp.shopApp.mapper.ProductMapper;
 import com.shopapp.shopApp.model.AppUser;
-import com.shopapp.shopApp.model.Product;
-import com.shopapp.shopApp.model.WishList;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.AppUserServiceImpl;
 import com.shopapp.shopApp.service.WishListServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import static com.shopapp.shopApp.mapper.ProductMapper.getProductsDto;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static com.shopapp.shopApp.mapper.ProductMapper.getSetOfProductsDto;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
@@ -40,7 +33,7 @@ public class WishListController {
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) {
         try {
-            Set<ProductDisplayDto> productDto = getProductsDto(wishListService.getProducts(wishListCode));
+            Set<ProductDisplayDto> productDto = getSetOfProductsDto(wishListService.getProducts(wishListCode));
             return ResponseEntity.ok(productDto);
         } catch (WishListNotFoundException e) {
             return new ResponseEntity<>(null, BAD_REQUEST);

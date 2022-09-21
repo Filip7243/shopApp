@@ -1,11 +1,15 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.constants.ExceptionsConstants;
+import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
+import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ProductReview;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND;
 
@@ -15,13 +19,19 @@ public class ProductReviewServiceImpl implements ProductReviewService{
 
     private final ProductReviewRepository reviewRepository;
 
+
+    @Override
+    public List<ProductReviewAddUpdateDto> getUserReviews(AppUser user) {
+        return reviewRepository.getProductReviewByUserOrderByStarsDesc(user);
+    }
+
     @Override
     public void addReview(ProductReview review) {
         reviewRepository.save(review);
     }
 
     @Override
-    public void updateReview(String reviewCode, ProductReview review) {
+    public void updateReview(String reviewCode, ProductReviewAddUpdateDto review) {
         ProductReview productReview = getReview(reviewCode);
         productReview.setTopic(review.getTopic());
         productReview.setDescription(review.getDescription());
