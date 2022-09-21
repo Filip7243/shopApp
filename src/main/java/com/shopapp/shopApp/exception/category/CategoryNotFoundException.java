@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.exception.product;
+package com.shopapp.shopApp.exception.category;
 
 public class CategoryNotFoundException extends RuntimeException{
 

@@ -24,8 +24,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private final AppUserServiceImpl userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
 
         try {
             log.info("PATH: " + request.getServletPath());
@@ -33,7 +32,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     || request.getServletPath().equals("/api/auth/signUp")
                     || request.getServletPath().equals("/api/auth/confirm")
                     || request.getServletPath().equals("/api/users/accessToken/refresh")) {
-                System.out.println("CO JEST KURWA");
                 filterChain.doFilter(request, response);
             } else {
                 String token = jwtUtils.getTokenFromHeader(request);

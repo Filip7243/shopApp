@@ -1,6 +1,8 @@
 package com.shopapp.shopApp.exception.product;
 
 import com.shopapp.shopApp.exception.ExceptionDetails;
+import com.shopapp.shopApp.exception.category.CategoryExistsException;
+import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

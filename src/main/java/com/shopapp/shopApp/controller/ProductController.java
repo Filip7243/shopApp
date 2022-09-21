@@ -1,7 +1,7 @@
 package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
-import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
+import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.model.Product;

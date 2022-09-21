@@ -1,8 +1,8 @@
 package com.shopapp.shopApp.service.category;
 
 import com.shopapp.shopApp.dto.CategorySaveUpdateDto;
-import com.shopapp.shopApp.exception.product.CategoryExistsException;
-import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
+import com.shopapp.shopApp.exception.category.CategoryExistsException;
+import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
