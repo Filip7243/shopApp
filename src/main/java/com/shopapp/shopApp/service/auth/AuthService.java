@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.auth;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;

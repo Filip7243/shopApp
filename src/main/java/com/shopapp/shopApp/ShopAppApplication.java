@@ -1,10 +1,12 @@
 package com.shopapp.shopApp;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
-import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
-import com.shopapp.shopApp.mapper.ProductMapper;
 import com.shopapp.shopApp.model.*;
-import com.shopapp.shopApp.service.*;
+import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
+import com.shopapp.shopApp.service.cartitem.CartItemServiceImpl;
+import com.shopapp.shopApp.service.category.CategoryServiceImpl;
+import com.shopapp.shopApp.service.product.ProductServiceImpl;
+import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

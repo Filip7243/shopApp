@@ -1,14 +1,13 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.dto.CartItemDto;
 import com.shopapp.shopApp.dto.OrderResponse;
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.exception.order.OrderNotFoundException;
 import com.shopapp.shopApp.mapper.CartItemMapper;
 import com.shopapp.shopApp.model.*;
-import com.shopapp.shopApp.service.AppUserServiceImpl;
-import com.shopapp.shopApp.service.OrderServiceImpl;
-import com.shopapp.shopApp.service.ShoppingCartServiceImpl;
+import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
+import com.shopapp.shopApp.service.order.OrderServiceImpl;
+import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

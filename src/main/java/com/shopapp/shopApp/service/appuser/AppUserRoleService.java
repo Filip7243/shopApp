@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.appuser;
 
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUserRole;

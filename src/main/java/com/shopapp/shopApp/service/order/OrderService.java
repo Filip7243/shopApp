@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.order;
 
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.model.CartItem;

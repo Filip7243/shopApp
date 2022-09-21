@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.wishlist;
 
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.Product;

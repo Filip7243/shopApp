@@ -6,14 +6,13 @@ import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.model.CartItem;
-import com.shopapp.shopApp.service.ShoppingCartServiceImpl;
+import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @AllArgsConstructor

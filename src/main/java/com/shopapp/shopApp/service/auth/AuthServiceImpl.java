@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.auth;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
@@ -14,6 +13,7 @@ import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
+import com.shopapp.shopApp.service.confirmationtoken.ConfirmationTokenServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

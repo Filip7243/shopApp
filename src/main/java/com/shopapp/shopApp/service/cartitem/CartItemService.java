@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.cartitem;
 
 import com.shopapp.shopApp.model.CartItem;
 import com.shopapp.shopApp.model.Product;

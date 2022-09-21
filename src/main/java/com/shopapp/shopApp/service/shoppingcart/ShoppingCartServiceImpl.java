@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.shoppingcart;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.CartItemNotFoundException;
 import com.shopapp.shopApp.exception.product.NotEnoughInStockException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
@@ -14,6 +13,7 @@ import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.repository.CartItemRepository;
 import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.ShoppingCartRepository;
+import com.shopapp.shopApp.service.cartitem.CartItemServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

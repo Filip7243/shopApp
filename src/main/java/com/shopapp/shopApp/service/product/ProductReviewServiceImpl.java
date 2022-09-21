@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.product;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
 import com.shopapp.shopApp.model.AppUser;

@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.category;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.CategorySaveUpdateDto;
 import com.shopapp.shopApp.exception.product.CategoryExistsException;
 import com.shopapp.shopApp.exception.product.CategoryNotFoundException;

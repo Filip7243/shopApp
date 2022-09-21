@@ -5,10 +5,8 @@ import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.model.Product;
-import com.shopapp.shopApp.service.ProductService;
-import com.shopapp.shopApp.service.ProductServiceImpl;
+import com.shopapp.shopApp.service.product.ProductServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

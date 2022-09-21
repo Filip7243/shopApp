@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.appuser;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
@@ -18,7 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.*;

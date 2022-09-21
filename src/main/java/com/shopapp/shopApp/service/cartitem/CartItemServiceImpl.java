@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.cartitem;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.CartItemNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.model.CartItem;

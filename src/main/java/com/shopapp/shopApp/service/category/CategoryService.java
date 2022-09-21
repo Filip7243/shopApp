@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.category;
 
 import com.shopapp.shopApp.dto.CategorySaveUpdateDto;
 import com.shopapp.shopApp.model.Category;

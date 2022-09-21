@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.product;
 
 import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;

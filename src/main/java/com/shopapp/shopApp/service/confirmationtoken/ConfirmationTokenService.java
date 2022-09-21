@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.confirmationtoken;
 
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;

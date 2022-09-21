@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.wishlist;
 
 import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
@@ -8,11 +8,12 @@ import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.WishList;
 import com.shopapp.shopApp.repository.WishListRepository;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
+import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
+import com.shopapp.shopApp.service.product.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

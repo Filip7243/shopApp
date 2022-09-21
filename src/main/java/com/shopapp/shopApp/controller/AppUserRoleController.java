@@ -4,7 +4,7 @@ import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.model.AppUserRole;
-import com.shopapp.shopApp.service.AppUserRoleServiceImpl;
+import com.shopapp.shopApp.service.appuser.AppUserRoleServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

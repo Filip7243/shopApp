@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.confirmationtoken;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;

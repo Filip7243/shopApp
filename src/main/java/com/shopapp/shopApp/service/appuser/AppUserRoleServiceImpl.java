@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.appuser;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;

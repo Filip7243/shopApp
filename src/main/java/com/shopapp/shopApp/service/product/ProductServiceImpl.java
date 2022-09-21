@@ -1,6 +1,5 @@
-package com.shopapp.shopApp.service;
+package com.shopapp.shopApp.service.product;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;

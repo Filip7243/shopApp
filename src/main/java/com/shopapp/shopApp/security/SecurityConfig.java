@@ -3,7 +3,7 @@ package com.shopapp.shopApp.security;
 import com.shopapp.shopApp.security.filter.CustomAuthorizationFilter;
 import com.shopapp.shopApp.security.handler.CustomLogoutHandler;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
-import com.shopapp.shopApp.service.AppUserServiceImpl;
+import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
