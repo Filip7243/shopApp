@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.shopapp.shopApp.mapper.CategoryMapper.mapToCategory;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/category")
@@ -28,32 +27,20 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCategory(@RequestBody CategorySaveUpdateDto category) {
-        try {
-            categoryService.addCategory(mapToCategory(category));
-            return ResponseEntity.status(CREATED).body("Added category: " + category.getCategoryName());
-        } catch (CategoryExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addCategory(@RequestBody CategorySaveUpdateDto category) throws CategoryExistsException{
+        categoryService.addCategory(mapToCategory(category));
+        return ResponseEntity.status(CREATED).body("Added category: " + category.getCategoryName());
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategorySaveUpdateDto category) {
-        try {
-            categoryService.updateCategory(id, category);
-            return ResponseEntity.ok("Updated category");
-        } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategorySaveUpdateDto category) throws CategoryNotFoundException{
+        categoryService.updateCategory(id, category);
+        return ResponseEntity.ok("Updated category");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
-        try {
-            categoryService.deleteCategoryWithId(id);
-            return ResponseEntity.ok("Deleted category");
-        } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) throws CategoryNotFoundException{
+        categoryService.deleteCategoryWithId(id);
+        return ResponseEntity.ok("Deleted category");
     }
 }

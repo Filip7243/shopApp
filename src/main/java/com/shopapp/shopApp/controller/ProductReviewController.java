@@ -1,7 +1,9 @@
 package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
+import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ProductReview;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
@@ -30,7 +32,7 @@ public class ProductReviewController {
     private final AppUserServiceImpl appUserService;
 
     @GetMapping("/show")
-    public List<ProductReviewAddUpdateDto> getUserReviews(HttpServletRequest request) {
+    public List<ProductReviewAddUpdateDto> getUserReviews(HttpServletRequest request) throws UserNotFoundException {
         AppUser user = getUser(request);
         return reviewService.getUserReviews(user);
     }
@@ -38,7 +40,7 @@ public class ProductReviewController {
     @PostMapping("/add")
     public ResponseEntity<?> addReview(@RequestBody ProductReviewAddUpdateDto reviewDto,
                                        @RequestParam String productCode,
-                                       HttpServletRequest request) {
+                                       HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
         ProductReview productReview = mapToProductReview(reviewDto);
         productReview.setProduct(productService.getProductWithProductCode(productCode));
         AppUser user = getUser(request);
@@ -49,26 +51,18 @@ public class ProductReviewController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateReview(@RequestParam String reviewCode,
-                                          @RequestBody ProductReviewAddUpdateDto reviewDto) {
-        try {
-            reviewService.updateReview(reviewCode, reviewDto);
-            return ResponseEntity.ok().body("Review Updated!");
-        } catch (ProductReviewNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+                                          @RequestBody ProductReviewAddUpdateDto reviewDto) throws ProductReviewNotFoundException {
+        reviewService.updateReview(reviewCode, reviewDto);
+        return ResponseEntity.ok().body("Review Updated!");
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteReview(@RequestParam String reviewCode) {
-        try {
-            reviewService.deleteReview(reviewCode);
-            return ResponseEntity.status(GONE).body("Deleted review!");
-        } catch (ProductReviewNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteReview(@RequestParam String reviewCode) throws ProductReviewNotFoundException {
+        reviewService.deleteReview(reviewCode);
+        return ResponseEntity.status(GONE).body("Review deleted!");
     }
 
-    private AppUser getUser(HttpServletRequest request) {
+    private AppUser getUser(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
         return (AppUser) appUserService.loadUserByUsername(username);

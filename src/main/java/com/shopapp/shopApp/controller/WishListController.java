@@ -1,6 +1,7 @@
 package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.ProductDisplayDto;
+import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.exception.wishlist.WishListNotFoundException;
@@ -18,7 +19,6 @@ import java.net.URI;
 import java.util.Set;
 
 import static com.shopapp.shopApp.mapper.ProductMapper.getSetOfProductsDto;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Slf4j
 @RestController
@@ -31,17 +31,13 @@ public class WishListController {
     private final AppUserServiceImpl userService;
 
     @GetMapping("/show")
-    public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) {
-        try {
-            Set<ProductDisplayDto> productDto = getSetOfProductsDto(wishListService.getProducts(wishListCode));
-            return ResponseEntity.ok(productDto);
-        } catch (WishListNotFoundException e) {
-            return new ResponseEntity<>(null, BAD_REQUEST);
-        }
+    public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
+        Set<ProductDisplayDto> productDto = getSetOfProductsDto(wishListService.getProducts(wishListCode));
+        return ResponseEntity.ok(productDto);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createWishList(HttpServletRequest request) {
+    public ResponseEntity<?> createWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
         AppUser user = (AppUser) userService.loadUserByUsername(username);
@@ -50,35 +46,27 @@ public class WishListController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProductToWishList(@RequestParam String wishListCode, @RequestParam String productCode, HttpServletRequest request) {
-        try {
-            wishListService.addProductToWishList(wishListCode, productCode, request);
-            return ResponseEntity.ok("Added item!");
-        } catch (WishListNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addProductToWishList(@RequestParam String wishListCode, @RequestParam String productCode, HttpServletRequest request)
+            throws WishListNotFoundException, UserNotFoundException, ProductNotFoundException, CategoryNotFoundException {
+
+        wishListService.addProductToWishList(wishListCode, productCode, request);
+        return ResponseEntity.ok("Added item!");
     }
 
     @PostMapping("/deleteItem")
-    public ResponseEntity<?> deleteProductFromWishList(@RequestParam String wishListCode, @RequestParam String productCode) {
-        try {
-            wishListService.deleteProductFromWishList(wishListCode, productCode);
-            return ResponseEntity.ok("Product deleted from wishList");
-        } catch (WishListNotFoundException | ProductNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteProductFromWishList(@RequestParam String wishListCode, @RequestParam String productCode)
+            throws WishListNotFoundException, ProductNotFoundException, CategoryNotFoundException {
+
+        wishListService.deleteProductFromWishList(wishListCode, productCode);
+        return ResponseEntity.ok("Product deleted from wishList");
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteWishList(HttpServletRequest request) {
-        try {
-            String token = jwtUtils.getTokenFromHeader(request);
-            String username = jwtUtils.getUsernameFromJwtToken(token);
-            AppUser user = (AppUser) userService.loadUserByUsername(username);
-            wishListService.deleteWishList(user);
-            return ResponseEntity.ok("WishList deleted!");
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {
+        String token = jwtUtils.getTokenFromHeader(request);
+        String username = jwtUtils.getUsernameFromJwtToken(token);
+        AppUser user = (AppUser) userService.loadUserByUsername(username);
+        wishListService.deleteWishList(user);
+        return ResponseEntity.ok("WishList deleted!");
     }
 }

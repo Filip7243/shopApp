@@ -14,7 +14,6 @@ import java.util.List;
 
 import static com.shopapp.shopApp.mapper.ProductMapper.mapToProduct;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @AllArgsConstructor
@@ -29,44 +28,31 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody ProductSaveUpdateDto product) {
-        try {
-            productService.addProduct(mapToProduct(product));
-            return ResponseEntity.status(CREATED).body("Product created");
-        } catch (ProductExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addProduct(@RequestBody ProductSaveUpdateDto product) throws ProductExistsException {
+        productService.addProduct(mapToProduct(product));
+        return ResponseEntity.status(CREATED).body("Product created");
     }
 
     @PostMapping("/addCategory")
-    public ResponseEntity<?> addCategoryToProduct(@RequestParam String productCode, @RequestParam String categoryName) {
-        try {
-            productService.addCategoryToProduct(productCode, categoryName);
-            return ResponseEntity.status(CREATED).body("Category: " + categoryName + " added to product");
-        } catch (ProductNotFoundException | CategoryNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addCategoryToProduct(@RequestParam String productCode, @RequestParam String categoryName)
+            throws ProductNotFoundException, CategoryNotFoundException {
+
+        productService.addCategoryToProduct(productCode, categoryName);
+        return ResponseEntity.status(CREATED).body("Category: " + categoryName + " added to product");
     }
 
     @PutMapping("/update/{productCode}")
     public ResponseEntity<?> updateProduct(@PathVariable String productCode,
-                                           @RequestBody ProductSaveUpdateDto product) {
-        try {
-            productService.updateProduct(productCode, mapToProduct(product));
-            return ResponseEntity.ok("Product updated");
-        } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
-        }
+                                           @RequestBody ProductSaveUpdateDto product) throws ProductNotFoundException {
+
+        productService.updateProduct(productCode, mapToProduct(product));
+        return ResponseEntity.ok("Product updated");
     }
 
     @DeleteMapping("/delete/{productCode}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String productCode) {
-        try {
-            productService.deleteProductWithProductCode(productCode);
-            return ResponseEntity.ok("Product deleted");
-        } catch (ProductNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteProduct(@PathVariable String productCode) throws ProductNotFoundException {
+        productService.deleteProductWithProductCode(productCode);
+        return ResponseEntity.ok("Product deleted");
     }
 
 }

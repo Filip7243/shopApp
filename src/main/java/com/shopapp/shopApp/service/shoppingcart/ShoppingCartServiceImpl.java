@@ -102,8 +102,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public void deleteItemFromShoppingCart(String shoppingCartCode, Long itemId) {
-        ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
+        ShoppingCart shoppingCart = getShoppingCart(shoppingCartCode);
         CartItem item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new CartItemNotFoundException(CART_ITEM_NOT_FOUND));
         shoppingCart.getItems().remove(item);

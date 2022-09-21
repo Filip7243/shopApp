@@ -30,26 +30,18 @@ public class AuthController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<String> singUp(@RequestBody AppUserSaveUpdateDto registerRequest) {
-        try {
-            authService.signUpUser(registerRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body("User with username" + registerRequest.getEmail() + " registered");
-        } catch (UserExistsException | BadEmailException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<String> singUp(@RequestBody AppUserSaveUpdateDto registerRequest)
+            throws UserExistsException, BadEmailException, IllegalStateException {
+        authService.signUpUser(registerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User with username" + registerRequest.getEmail() + " registered");
     }
 
     @GetMapping("/confirm")
-    public ResponseEntity<?> confirmToken(@RequestParam("token") String token) {
-        try {
-            ConfirmationToken foundToken = tokenService.getToken(token);
-            tokenService.confirmEmail(foundToken);
-            return ResponseEntity.ok("CONFIRMED!");
-        } catch (ConfirmationTokenNotFoundException |
-                 ConfirmationTokenExpiredException |
-                 ConfirmationTokenConfirmedException e) {
-            return ResponseEntity.status(HttpStatus.GONE).body(e.getMessage());
-        }
+    public ResponseEntity<?> confirmToken(@RequestParam("token") String token)
+            throws ConfirmationTokenNotFoundException, ConfirmationTokenExpiredException, ConfirmationTokenConfirmedException {
+        ConfirmationToken foundToken = tokenService.getToken(token);
+        tokenService.confirmEmail(foundToken);
+        return ResponseEntity.ok("CONFIRMED!");
     }
 
 }

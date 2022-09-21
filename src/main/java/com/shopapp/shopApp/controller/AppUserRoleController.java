@@ -26,34 +26,21 @@ public class AppUserRoleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRole(@RequestBody AppUserRoleSaveUpdateDto role) {
-        try {
-            roleService.saveRole(mapToAppUserRole(role));
-            return ResponseEntity.ok("CREATED");
-        } catch (RoleExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> addRole(@RequestBody AppUserRoleSaveUpdateDto role) throws RoleExistsException {
+        roleService.saveRole(mapToAppUserRole(role));
+        return ResponseEntity.ok("CREATED");
     }
 
     @DeleteMapping("/delete/{name}")
-    public ResponseEntity<?> deleteRoleWithName(@PathVariable String name) {
-        try {
-            roleService.deleteRoleWithName(name);
-            return ResponseEntity.ok("DELETED");
-        } catch (RoleNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteRoleWithName(@PathVariable String name) throws RoleNotFoundException{
+        roleService.deleteRoleWithName(name);
+        return ResponseEntity.ok("DELETED");
     }
 
     @PutMapping("/update/{roleName}")
     public ResponseEntity<?> updateRole(@PathVariable String roleName,
-                                        @RequestBody AppUserRoleSaveUpdateDto role) {
-        try {
-            roleService.updateRole(roleName, role);
-            return ResponseEntity.ok("UPDATED");
-        } catch (RoleNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+                                        @RequestBody AppUserRoleSaveUpdateDto role) throws RoleNotFoundException {
+        roleService.updateRole(roleName, role);
+        return ResponseEntity.ok("UPDATED");
     }
-
 }
