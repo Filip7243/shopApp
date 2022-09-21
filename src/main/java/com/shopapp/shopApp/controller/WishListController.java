@@ -57,9 +57,9 @@ public class WishListController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProductToWishList(@RequestParam String wishListCode, @RequestParam String productCode) {
+    public ResponseEntity<?> addProductToWishList(@RequestParam String wishListCode, @RequestParam String productCode, HttpServletRequest request) {
         try {
-            wishListService.addProductToWishList(wishListCode, productCode);
+            wishListService.addProductToWishList(wishListCode, productCode, request);
             return ResponseEntity.ok("Added item!");
         } catch (WishListNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

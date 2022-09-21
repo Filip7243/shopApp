@@ -7,9 +7,12 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.WishList;
 import com.shopapp.shopApp.repository.WishListRepository;
+import com.shopapp.shopApp.security.jwt.JwtUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -23,14 +26,16 @@ public class WishListServiceImpl implements WishListService {
     private final WishListRepository wishListRepository;
     private final AppUserServiceImpl appUserService;
     private final ProductServiceImpl productService;
+    private final JwtUtils jwtUtils;
 
     @Override
-    public void createWishList(String userCode) {
+    public String createWishList(String userCode) {
         WishList wishList = new WishList();
         wishList.setWishListCode(UUID.randomUUID().toString());
         wishList.setUser(appUserService.getUserWithUserCode(userCode));
         wishList.setWishListItems(new HashSet<>());
         wishListRepository.save(wishList);
+        return wishList.getWishListCode();
     }
 
     @Override
@@ -49,12 +54,23 @@ public class WishListServiceImpl implements WishListService {
     }
 
     @Override
-    public void addProductToWishList(String wishListCode, String productCode) {
+    public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
+        AppUser user = null;
+        if(!wishListRepository.existsByWishListCode(wishListCode)) {
+            String token = jwtUtils.getTokenFromHeader(request);
+            String username = jwtUtils.getUsernameFromJwtToken(token);
+            user = (AppUser) appUserService.loadUserByUsername(username);
+            wishListCode = createWishList(user.getUserCode());
+        }
+
         WishList wishList = getWishList(wishListCode);
+        Set<Product> wishListItems = wishList.getWishListItems();
         Product product = productService.getProductWithProductCode(productCode);
-        wishList.getWishListItems().add(product);
+        if(wishListItems.contains(product)) {
+            return;
+        }
+        wishListItems.add(product);
         wishListRepository.save(wishList);
-        //TODO: zrobic if w ktorym sprawdzac czy instnieje shish list jestli nie to uzywam metoty createWishList(usercode)
     }
 
     @Override
