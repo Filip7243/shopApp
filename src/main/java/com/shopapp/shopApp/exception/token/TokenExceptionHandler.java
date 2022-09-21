@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static com.shopapp.shopApp.exception.ExceptionDetails.createDetails;
-import static org.springframework.http.HttpStatus.GONE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class TokenExceptionHandler {
@@ -20,13 +19,13 @@ public class TokenExceptionHandler {
 
     @ExceptionHandler(ConfirmationTokenConfirmedException.class)
     public ResponseEntity<Object> handleConfirmationTokenConfirmedException(ConfirmationTokenConfirmedException e) {
-        ExceptionDetails details = createDetails(e.getMessage(), GONE);
+        ExceptionDetails details = createDetails(e.getMessage(), BAD_REQUEST);
         return new ResponseEntity<>(details, details.status());
     }
 
     @ExceptionHandler(ConfirmationTokenExpiredException.class)
     public ResponseEntity<Object> handleConfirmationTokenExpiredException(ConfirmationTokenExpiredException e) {
-        ExceptionDetails details = createDetails(e.getMessage(), GONE);
+        ExceptionDetails details = createDetails(e.getMessage(), BAD_REQUEST);
         return new ResponseEntity<>(details, details.status());
     }
 
