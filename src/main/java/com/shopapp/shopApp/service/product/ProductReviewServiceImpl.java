@@ -14,10 +14,9 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND
 
 @Service
 @AllArgsConstructor
-public class ProductReviewServiceImpl implements ProductReviewService{
+public class ProductReviewServiceImpl implements ProductReviewService {
 
     private final ProductReviewRepository reviewRepository;
-
 
     @Override
     public List<ProductReviewAddUpdateDto> getUserReviews(AppUser user) {

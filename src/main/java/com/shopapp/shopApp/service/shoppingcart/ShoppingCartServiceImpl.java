@@ -51,10 +51,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
                 .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, appUserCode)));
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
-
         if(user.getShoppingCart() != null) {
             throw new IllegalStateException("User already have shoppingCart");
         }
+
         shoppingCart.setUser(user);
         cartRepository.save(shoppingCart);
 

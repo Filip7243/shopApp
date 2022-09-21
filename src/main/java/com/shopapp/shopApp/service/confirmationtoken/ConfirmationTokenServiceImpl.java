@@ -49,7 +49,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
     @Override
     public void confirmEmail(ConfirmationToken confirmationToken) {
 
-        //TODO: it might be deleted
         if(!tokenRepository.existsByToken(confirmationToken.getToken())) {
             throw new ConfirmationTokenNotFoundException(TOKEN_NOT_FOUND);
         }
