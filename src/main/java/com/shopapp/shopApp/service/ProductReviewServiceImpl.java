@@ -1,10 +1,13 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.constants.ExceptionsConstants;
+import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
 import com.shopapp.shopApp.model.ProductReview;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +38,6 @@ public class ProductReviewServiceImpl implements ProductReviewService{
 
     private ProductReview getReview(String reviewCode) {
         return reviewRepository.findByReviewCode(reviewCode)
-                .orElseThrow(() -> new ProuctReviewNotFound(ExceptionsConstants.REVIEW_NOT_FOUND));
+                .orElseThrow(() -> new ProductReviewNotFoundException(REVIEW_NOT_FOUND));
     }
 }

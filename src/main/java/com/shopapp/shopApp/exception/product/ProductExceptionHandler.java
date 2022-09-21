@@ -52,4 +52,10 @@ public class ProductExceptionHandler {
         ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(details, details.status());
     }
+
+    @ExceptionHandler(ProductReviewNotFoundException.class)
+    public ResponseEntity<Object> handleProductReviewNotFoundException(ProductReviewNotFoundException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(details, details.status());
+    }
 }

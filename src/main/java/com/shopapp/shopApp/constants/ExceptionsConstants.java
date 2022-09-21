@@ -37,4 +37,8 @@ public class ExceptionsConstants {
 
     // WISH LIST
     public static final String WISH_LIST_NOT_FOUND = "WishList not found!";
+
+    // REVIEW
+    public static final String REVIEW_NOT_FOUND = "Review not found!";
+
 }
