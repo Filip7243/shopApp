@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.AppUserRoleMapper.mapToAppUserRole;
 
 @RestController
@@ -28,19 +30,19 @@ public class AppUserRoleController {
     @PostMapping("/add")
     public ResponseEntity<?> addRole(@RequestBody AppUserRoleSaveUpdateDto role) throws RoleExistsException {
         roleService.saveRole(mapToAppUserRole(role));
-        return ResponseEntity.ok("CREATED");
+        return ResponseEntity.ok(String.format(ROLE_CREATED, role.getName()));
     }
 
     @DeleteMapping("/delete/{name}")
-    public ResponseEntity<?> deleteRoleWithName(@PathVariable String name) throws RoleNotFoundException{
+    public ResponseEntity<?> deleteRoleWithName(@PathVariable String name) throws RoleNotFoundException {
         roleService.deleteRoleWithName(name);
-        return ResponseEntity.ok("DELETED");
+        return ResponseEntity.ok(String.format(ROLE_DELETED, name));
     }
 
     @PutMapping("/update/{roleName}")
     public ResponseEntity<?> updateRole(@PathVariable String roleName,
                                         @RequestBody AppUserRoleSaveUpdateDto role) throws RoleNotFoundException {
         roleService.updateRole(roleName, role);
-        return ResponseEntity.ok("UPDATED");
+        return ResponseEntity.ok(String.format(ROLE_UPDATED, roleName));
     }
 }

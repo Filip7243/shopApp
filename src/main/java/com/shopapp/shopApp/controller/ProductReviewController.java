@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.ProductReviewMapper.mapToProductReview;
 import static org.springframework.http.HttpStatus.GONE;
 
@@ -46,20 +48,20 @@ public class ProductReviewController {
         AppUser user = getUser(request);
         productReview.setUser(user);
         reviewService.addReview(productReview);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Created!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(String.format(PRODUCT_REVIEW_CREATED, productCode, user.getEmail()));
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> updateReview(@RequestParam String reviewCode,
                                           @RequestBody ProductReviewAddUpdateDto reviewDto) throws ProductReviewNotFoundException {
         reviewService.updateReview(reviewCode, reviewDto);
-        return ResponseEntity.ok().body("Review Updated!");
+        return ResponseEntity.ok().body(String.format(PRODUCT_REVIEW_UPDATED, reviewCode));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteReview(@RequestParam String reviewCode) throws ProductReviewNotFoundException {
         reviewService.deleteReview(reviewCode);
-        return ResponseEntity.status(GONE).body("Review deleted!");
+        return ResponseEntity.status(GONE).body(String.format(PRODUCT_REVIEW_DELETED, reviewCode));
     }
 
     private AppUser getUser(HttpServletRequest request) throws UserNotFoundException {

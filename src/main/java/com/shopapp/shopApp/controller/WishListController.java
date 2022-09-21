@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Set;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.ProductMapper.getSetOfProductsDto;
 
 @Slf4j
@@ -32,8 +34,7 @@ public class WishListController {
 
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
-        Set<ProductDisplayDto> productDto = getSetOfProductsDto(wishListService.getProducts(wishListCode));
-        return ResponseEntity.ok(productDto);
+        return ResponseEntity.ok(getSetOfProductsDto(wishListService.getProducts(wishListCode)));
     }
 
     @PostMapping("/create")
@@ -42,7 +43,7 @@ public class WishListController {
         String username = jwtUtils.getUsernameFromJwtToken(token);
         AppUser user = (AppUser) userService.loadUserByUsername(username);
         wishListService.createWishList(user.getUserCode());
-        return ResponseEntity.created(URI.create(request.getRequestURI())).body("WishList created!");
+        return ResponseEntity.created(URI.create(request.getRequestURI())).body(WISH_LIST_CREATED);
     }
 
     @PostMapping("/add")
@@ -50,7 +51,7 @@ public class WishListController {
             throws WishListNotFoundException, UserNotFoundException, ProductNotFoundException, CategoryNotFoundException {
 
         wishListService.addProductToWishList(wishListCode, productCode, request);
-        return ResponseEntity.ok("Added item!");
+        return ResponseEntity.ok(String.format(WISH_LIST_PRODUCT_ADDED, productCode));
     }
 
     @PostMapping("/deleteItem")
@@ -58,7 +59,7 @@ public class WishListController {
             throws WishListNotFoundException, ProductNotFoundException, CategoryNotFoundException {
 
         wishListService.deleteProductFromWishList(wishListCode, productCode);
-        return ResponseEntity.ok("Product deleted from wishList");
+        return ResponseEntity.ok(String.format(WISH_LIST_PRODUCT_DELETED, productCode));
     }
 
     @DeleteMapping("/delete")
@@ -67,6 +68,6 @@ public class WishListController {
         String username = jwtUtils.getUsernameFromJwtToken(token);
         AppUser user = (AppUser) userService.loadUserByUsername(username);
         wishListService.deleteWishList(user);
-        return ResponseEntity.ok("WishList deleted!");
+        return ResponseEntity.ok(WISH_LIST_DELETED);
     }
 }

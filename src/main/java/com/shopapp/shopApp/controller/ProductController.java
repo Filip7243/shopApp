@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.ProductMapper.mapToProduct;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -30,7 +32,7 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody ProductSaveUpdateDto product) throws ProductExistsException {
         productService.addProduct(mapToProduct(product));
-        return ResponseEntity.status(CREATED).body("Product created");
+        return ResponseEntity.status(CREATED).body(String.format(PRODUCT_CREATED, product.getName()));
     }
 
     @PostMapping("/addCategory")
@@ -38,7 +40,7 @@ public class ProductController {
             throws ProductNotFoundException, CategoryNotFoundException {
 
         productService.addCategoryToProduct(productCode, categoryName);
-        return ResponseEntity.status(CREATED).body("Category: " + categoryName + " added to product");
+        return ResponseEntity.status(CREATED).body(String.format(CATEGORY_ADDED_TO_PRODUCT, categoryName, productCode));
     }
 
     @PutMapping("/update/{productCode}")
@@ -46,13 +48,13 @@ public class ProductController {
                                            @RequestBody ProductSaveUpdateDto product) throws ProductNotFoundException {
 
         productService.updateProduct(productCode, mapToProduct(product));
-        return ResponseEntity.ok("Product updated");
+        return ResponseEntity.ok(String.format(PRODUCT_UPDATED, productCode));
     }
 
     @DeleteMapping("/delete/{productCode}")
     public ResponseEntity<?> deleteProduct(@PathVariable String productCode) throws ProductNotFoundException {
         productService.deleteProductWithProductCode(productCode);
-        return ResponseEntity.ok("Product deleted");
+        return ResponseEntity.ok(String.format(PRODUCT_DELETED, productCode));
     }
 
 }

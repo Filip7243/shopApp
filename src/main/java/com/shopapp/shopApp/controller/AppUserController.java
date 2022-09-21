@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
@@ -10,7 +11,6 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUserDisplayDto;
 
 @RestController
@@ -27,7 +28,6 @@ public class AppUserController {
 
     private final AppUserServiceImpl userService;
     private final JwtUtils jwtUtils;
-    private final Environment env;
 
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
@@ -38,27 +38,27 @@ public class AppUserController {
     @PostMapping("/save")
     public ResponseEntity<?> saveUser(@RequestBody AppUserSaveUpdateDto user) throws UserExistsException {
         userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("USER CREATED");
+        return ResponseEntity.status(HttpStatus.CREATED).body(String.format(USER_CREATED, user.getEmail()));
     }
 
     @DeleteMapping("/delete/{userCode}")
     public ResponseEntity<?> deleteUserWithUserCode(@PathVariable String userCode) throws UserCodeNotFoundException {
         userService.deleteUserWithUserCode(userCode);
-        return ResponseEntity.status(HttpStatus.OK).body("DELETED");
+        return ResponseEntity.status(HttpStatus.OK).body(String.format(USER_DELETED, userCode));
     }
 
     @PutMapping("/update/{userCode}")
     public ResponseEntity<?> updateUser(@PathVariable String userCode,
                                         @RequestBody AppUserSaveUpdateDto user) throws UserCodeNotFoundException {
         userService.updateUser(userCode, user);
-        return ResponseEntity.ok("UPDATED");
+        return ResponseEntity.ok(String.format(USER_UPDATED, userCode));
     }
 
     @PostMapping("/roles/add")
     public ResponseEntity<?> addRoleToUser(@RequestParam String userCode, @RequestParam String roleName)
             throws UserCodeNotFoundException, RoleNotFoundException {
         userService.addRoleToUser(userCode, roleName);
-        return ResponseEntity.ok("ADDED ROLE TO USER");
+        return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
     }
 
     @GetMapping("/accessToken/refresh")
@@ -70,7 +70,7 @@ public class AppUserController {
 
             return ResponseEntity.ok(jwtUtils.refreshAccessToken(refreshToken, user));
         }
-        return ResponseEntity.badRequest().body("Could not refresh the token!");
+        return ResponseEntity.badRequest().body(String.format(ACCESS_TOKEN_NOT_REFRESHED));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.CategorySaveUpdateDto;
 import com.shopapp.shopApp.exception.category.CategoryExistsException;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.*;
 import static com.shopapp.shopApp.mapper.CategoryMapper.mapToCategory;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -27,20 +29,20 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCategory(@RequestBody CategorySaveUpdateDto category) throws CategoryExistsException{
+    public ResponseEntity<?> addCategory(@RequestBody CategorySaveUpdateDto category) throws CategoryExistsException {
         categoryService.addCategory(mapToCategory(category));
-        return ResponseEntity.status(CREATED).body("Added category: " + category.getCategoryName());
+        return ResponseEntity.status(CREATED).body(String.format(CATEGORY_CREATED, category.getCategoryName()));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategorySaveUpdateDto category) throws CategoryNotFoundException{
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategorySaveUpdateDto category) throws CategoryNotFoundException {
         categoryService.updateCategory(id, category);
-        return ResponseEntity.ok("Updated category");
+        return ResponseEntity.ok(String.format(CATEGORY_UPDATED, category.getCategoryName()));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long id) throws CategoryNotFoundException{
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) throws CategoryNotFoundException {
         categoryService.deleteCategoryWithId(id);
-        return ResponseEntity.ok("Deleted category");
+        return ResponseEntity.ok(CATEGORY_DELETED);
     }
 }

@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.OrderResponse;
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.exception.order.OrderNotFoundException;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.shopapp.shopApp.constants.ResponseConstants.ORDER_DELETED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.GONE;
 
@@ -49,6 +51,6 @@ public class OrderController {
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteOrder(@RequestParam String orderCode) throws OrderNotFoundException {
         orderService.deleteOrder(orderCode);
-        return ResponseEntity.status(GONE).body("Deleted order!");
+        return ResponseEntity.status(GONE).body(String.format(ORDER_DELETED, orderCode));
     }
 }
