@@ -19,6 +19,7 @@ public class ProductReview {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    private String reviewCode;
     private String topic;
     private String description;
     private Integer stars; // from 1 to 5
