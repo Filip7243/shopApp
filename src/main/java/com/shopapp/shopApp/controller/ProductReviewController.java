@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -40,7 +41,7 @@ public class ProductReviewController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addReview(@RequestBody ProductReviewAddUpdateDto reviewDto,
+    public ResponseEntity<?> addReview(@RequestBody @Valid ProductReviewAddUpdateDto reviewDto,
                                        @RequestParam String productCode,
                                        HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
         ProductReview productReview = mapToProductReview(reviewDto);
@@ -53,7 +54,7 @@ public class ProductReviewController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateReview(@RequestParam String reviewCode,
-                                          @RequestBody ProductReviewAddUpdateDto reviewDto) throws ProductReviewNotFoundException {
+                                          @RequestBody @Valid ProductReviewAddUpdateDto reviewDto) throws ProductReviewNotFoundException {
         reviewService.updateReview(reviewCode, reviewDto);
         return ResponseEntity.ok().body(String.format(PRODUCT_REVIEW_UPDATED, reviewCode));
     }

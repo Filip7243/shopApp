@@ -3,7 +3,7 @@ package com.shopapp.shopApp.constants;
 public class ExceptionsConstants {
 
     // USER
-    public static final String BAD_EMAIL = "Email: %s in not valid!";
+    public static final String BAD_EMAIL = "Email is not valid!";
     public static final String USER_CODE_NOT_FOUND = "User with user code: %s not found!";
     public static final String USER_ALREADY_EXISTS = "User with email: %s, already exists!";
     public static final String USER_NOT_FOUND = "User %s not found!";

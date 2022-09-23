@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -36,7 +37,7 @@ public class AppUserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@RequestBody AppUserSaveUpdateDto user) throws UserExistsException {
+    public ResponseEntity<?> saveUser(@RequestBody @Valid AppUserSaveUpdateDto user) throws UserExistsException {
         userService.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format(USER_CREATED, user.getEmail()));
     }
@@ -49,7 +50,7 @@ public class AppUserController {
 
     @PutMapping("/update/{userCode}")
     public ResponseEntity<?> updateUser(@PathVariable String userCode,
-                                        @RequestBody AppUserSaveUpdateDto user) throws UserCodeNotFoundException {
+                                        @RequestBody @Valid AppUserSaveUpdateDto user) throws UserCodeNotFoundException {
         userService.updateUser(userCode, user);
         return ResponseEntity.ok(String.format(USER_UPDATED, userCode));
     }

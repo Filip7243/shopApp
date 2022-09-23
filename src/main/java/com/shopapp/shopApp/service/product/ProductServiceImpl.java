@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService{
     public void addProduct(Product product) {
         String productCode = product.getProductCode();
         if(productRepository.existsByProductCode(productCode)) {
-            throw new ProductExistsException(String.format(PRODUCT_ALREADY_EXISTS, product.getName()));
+            throw new ProductExistsException(String.format(PRODUCT_ALREADY_EXISTS, product.getName())); //TODO: non sense
         }
         productRepository.save(product);
     }

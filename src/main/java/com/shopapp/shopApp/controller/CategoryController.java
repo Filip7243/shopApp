@@ -8,8 +8,10 @@ import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.service.category.CategoryServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -29,13 +31,13 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCategory(@RequestBody CategorySaveUpdateDto category) throws CategoryExistsException {
+    public ResponseEntity<?> addCategory(@RequestBody @Valid CategorySaveUpdateDto category) throws CategoryExistsException {
         categoryService.addCategory(mapToCategory(category));
         return ResponseEntity.status(CREATED).body(String.format(CATEGORY_CREATED, category.getCategoryName()));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody CategorySaveUpdateDto category) throws CategoryNotFoundException {
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody @Valid CategorySaveUpdateDto category) throws CategoryNotFoundException {
         categoryService.updateCategory(id, category);
         return ResponseEntity.ok(String.format(CATEGORY_UPDATED, category.getCategoryName()));
     }

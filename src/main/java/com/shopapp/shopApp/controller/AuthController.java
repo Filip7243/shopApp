@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.shopapp.shopApp.constants.ResponseConstants.EMAIL_CONFIRMED;
 import static com.shopapp.shopApp.constants.ResponseConstants.USER_REGISTERED;
 
@@ -29,12 +31,12 @@ public class AuthController {
     private final ConfirmationTokenServiceImpl tokenService;
 
     @PostMapping("/signIn")
-    public ResponseEntity<JwtResponse> signIn(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> signIn(@RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.signInUser(loginRequest));
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<String> singUp(@RequestBody AppUserSaveUpdateDto registerRequest)
+    public ResponseEntity<String> singUp(@RequestBody @Valid AppUserSaveUpdateDto registerRequest)
             throws UserExistsException, BadEmailException, IllegalStateException {
         authService.signUpUser(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format(USER_REGISTERED, registerRequest.getEmail()));

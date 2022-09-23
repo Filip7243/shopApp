@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -28,7 +29,7 @@ public class AppUserRoleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRole(@RequestBody AppUserRoleSaveUpdateDto role) throws RoleExistsException {
+    public ResponseEntity<?> addRole(@RequestBody @Valid AppUserRoleSaveUpdateDto role) throws RoleExistsException {
         roleService.saveRole(mapToAppUserRole(role));
         return ResponseEntity.ok(String.format(ROLE_CREATED, role.getName()));
     }
@@ -41,7 +42,7 @@ public class AppUserRoleController {
 
     @PutMapping("/update/{roleName}")
     public ResponseEntity<?> updateRole(@PathVariable String roleName,
-                                        @RequestBody AppUserRoleSaveUpdateDto role) throws RoleNotFoundException {
+                                        @RequestBody @Valid AppUserRoleSaveUpdateDto role) throws RoleNotFoundException {
         roleService.updateRole(roleName, role);
         return ResponseEntity.ok(String.format(ROLE_UPDATED, roleName));
     }

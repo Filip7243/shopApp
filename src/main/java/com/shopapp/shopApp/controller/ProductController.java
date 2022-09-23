@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
@@ -11,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProduct(@RequestBody ProductSaveUpdateDto product) throws ProductExistsException {
+    public ResponseEntity<?> addProduct(@RequestBody @Valid ProductSaveUpdateDto product) throws ProductExistsException {
         productService.addProduct(mapToProduct(product));
         return ResponseEntity.status(CREATED).body(String.format(PRODUCT_CREATED, product.getName()));
     }
@@ -45,7 +45,7 @@ public class ProductController {
 
     @PutMapping("/update/{productCode}")
     public ResponseEntity<?> updateProduct(@PathVariable String productCode,
-                                           @RequestBody ProductSaveUpdateDto product) throws ProductNotFoundException {
+                                           @RequestBody @Valid ProductSaveUpdateDto product) throws ProductNotFoundException {
 
         productService.updateProduct(productCode, mapToProduct(product));
         return ResponseEntity.ok(String.format(PRODUCT_UPDATED, productCode));
