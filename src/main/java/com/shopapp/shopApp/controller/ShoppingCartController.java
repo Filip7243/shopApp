@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.GONE;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/cart")
+@RequestMapping("/api/carts")
 public class ShoppingCartController {
 
     private final ShoppingCartServiceImpl shoppingCartService;

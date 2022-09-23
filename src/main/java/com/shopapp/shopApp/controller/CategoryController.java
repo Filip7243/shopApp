@@ -19,7 +19,7 @@ import static com.shopapp.shopApp.mapper.CategoryMapper.mapToCategory;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 @AllArgsConstructor
 public class CategoryController {
 

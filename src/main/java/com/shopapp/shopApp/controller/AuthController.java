@@ -15,12 +15,22 @@ import com.shopapp.shopApp.service.confirmationtoken.ConfirmationTokenServiceImp
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.EMAIL_CONFIRMED;
 import static com.shopapp.shopApp.constants.ResponseConstants.USER_REGISTERED;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @AllArgsConstructor

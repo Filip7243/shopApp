@@ -25,7 +25,7 @@ import static com.shopapp.shopApp.mapper.ProductMapper.getSetOfProductsDto;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/wishlist")
+@RequestMapping("/api/wishlists")
 public class WishListController {
 
     private final WishListServiceImpl wishListService;
@@ -62,7 +62,7 @@ public class WishListController {
         return ResponseEntity.ok(String.format(WISH_LIST_PRODUCT_DELETED, productCode));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete") //todo: do zastanowienia czy ten endpoint jest potrzebny
     public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);

@@ -109,7 +109,7 @@ public class JwtUtils {
 
     public void addToBlackList(String token) {
         this.blockedTokens.add(token);
-    }
+    } //TODO: test it
 
     private DecodedJWT decodeJwt(String token) {
         Algorithm algorithm = Algorithm.HMAC512(secret.getBytes());

@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.GONE;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderController {
 
     private final OrderServiceImpl orderService;

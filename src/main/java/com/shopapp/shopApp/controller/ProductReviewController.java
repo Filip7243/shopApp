@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.GONE;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/product/review")
+@RequestMapping("/api/product/reviews")
 public class ProductReviewController {
 
     private final ProductReviewServiceImpl reviewService;

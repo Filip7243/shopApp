@@ -8,9 +8,14 @@ import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.service.appuser.AppUserRoleServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
@@ -34,10 +39,10 @@ public class AppUserRoleController {
         return ResponseEntity.ok(String.format(ROLE_CREATED, role.getName()));
     }
 
-    @DeleteMapping("/delete/{name}")
-    public ResponseEntity<?> deleteRoleWithName(@PathVariable String name) throws RoleNotFoundException {
-        roleService.deleteRoleWithName(name);
-        return ResponseEntity.ok(String.format(ROLE_DELETED, name));
+    @DeleteMapping("/delete/{roleName}")
+    public ResponseEntity<?> deleteRoleWithName(@PathVariable String roleName) throws RoleNotFoundException {
+        roleService.deleteRoleWithName(roleName);
+        return ResponseEntity.ok(String.format(ROLE_DELETED, roleName));
     }
 
     @PutMapping("/update/{roleName}")

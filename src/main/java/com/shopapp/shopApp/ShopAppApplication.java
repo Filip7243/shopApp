@@ -22,8 +22,7 @@ public class ShopAppApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(AppUserServiceImpl userService, ShoppingCartServiceImpl cartService,
-						  CartItemServiceImpl cartItemService, ProductServiceImpl productService, CategoryServiceImpl categoryService) {
+	CommandLineRunner run(AppUserServiceImpl userService, ProductServiceImpl productService, CategoryServiceImpl categoryService) {
 
 		return args -> {
 			AppUser user = userService.saveUser(new AppUserSaveUpdateDto(

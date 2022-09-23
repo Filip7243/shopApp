@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductServiceImpl productService;
@@ -27,7 +27,7 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
-    }
+    }//TODO: product display dto
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody @Valid ProductSaveUpdateDto product) throws ProductExistsException {
