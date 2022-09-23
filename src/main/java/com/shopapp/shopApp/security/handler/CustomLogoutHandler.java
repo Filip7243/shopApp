@@ -27,7 +27,7 @@ public class CustomLogoutHandler extends SimpleUrlLogoutSuccessHandler {
             throws IOException, ServletException {
         String token = jwtUtils.getTokenFromHeader(request);
         jwtUtils.addToBlackList(token);
-        response.setHeader(AUTHORIZATION, "");
+        response.setHeader(AUTHORIZATION, null);
         super.onLogoutSuccess(request, response, authentication);
     }
 }

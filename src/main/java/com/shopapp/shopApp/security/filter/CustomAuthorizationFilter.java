@@ -39,7 +39,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             } else {
                 String token = jwtUtils.getTokenFromHeader(request);
-                if (token != null) {
+                if (token != null && !jwtUtils.checkIfIsOnBlackList(token)) {
 
                     String username = jwtUtils.getUsernameFromJwtToken(token);
                     AppUser user = (AppUser) userService.loadUserByUsername(username);

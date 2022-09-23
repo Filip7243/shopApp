@@ -28,7 +28,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class JwtUtils {
 
     private String secret;
-    private final List<String> blockedTokens = new ArrayList<>();
+    private static final List<String> blockedTokens = new ArrayList<>();
 
     @Value("${jwt.token.secret}")
     private void setSecret(String secret) {
@@ -108,8 +108,15 @@ public class JwtUtils {
     }
 
     public void addToBlackList(String token) {
-        this.blockedTokens.add(token);
-    } //TODO: test it
+        if(!blockedTokens.contains(token)) {
+            blockedTokens.add(token);
+            blockedTokens.forEach(System.out::println);
+        }
+    }
+
+    public boolean checkIfIsOnBlackList(String token) {
+        return blockedTokens.contains(token);
+    }
 
     private DecodedJWT decodeJwt(String token) {
         Algorithm algorithm = Algorithm.HMAC512(secret.getBytes());
