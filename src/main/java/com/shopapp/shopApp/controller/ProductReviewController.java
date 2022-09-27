@@ -45,13 +45,15 @@ public class ProductReviewController {
                                        @RequestParam String productCode,
                                        HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
 
+        AppUser user = getUser(request);
+        if(reviewService.findByUser(user) != null) {
+            return ResponseEntity.badRequest().body("You already write review");
+        }
         ProductReview productReview = mapToProductReview(reviewDto);
         productReview.setProductId(productService.getProductWithProductCode(productCode).getId());
-        AppUser user = getUser(request);
         productReview.setUser(user);
         reviewService.addReview(productReview);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format(PRODUCT_REVIEW_CREATED, productCode, user.getEmail()));
-        //TODO: prevent multiple reviews
     }
 
     @PutMapping("/update")

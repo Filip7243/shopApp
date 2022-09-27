@@ -18,7 +18,6 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND
 public class ProductReviewServiceImpl implements ProductReviewService {
 
     private final ProductReviewRepository reviewRepository;
-    private final ProductRepository productRepository;
 
     @Override
     public List<ProductReviewAddUpdateDto> getUserReviews(AppUser user) {
@@ -44,6 +43,10 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     public void deleteReview(String reviewCode) {
         ProductReview productReview = getReview(reviewCode);
         reviewRepository.delete(productReview);
+    }
+
+    public ProductReview findByUser(AppUser user) {
+        return reviewRepository.findByUser(user).orElseThrow();
     }
 
     private ProductReview getReview(String reviewCode) {
