@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
@@ -35,7 +34,7 @@ public class WishListController {
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
         return ResponseEntity.ok(getSetOfProductsDto(wishListService.getProducts(wishListCode)));
-    }
+    }//todo; ogarnac jak zrobic zeby katergorie wyswetlalo w jednym zapytaniu
 
     @PostMapping("/create")
     public ResponseEntity<?> createWishList(HttpServletRequest request) throws UserNotFoundException {
@@ -60,7 +59,7 @@ public class WishListController {
 
         wishListService.deleteProductFromWishList(wishListCode, productCode);
         return ResponseEntity.ok(String.format(WISH_LIST_PRODUCT_DELETED, productCode));
-    }
+    }//TODO: shopping cart po strone usera w mouelu, o tego przy wyswietlaniu itemow mniej inforamcji(koszyk), itd..
 
     @DeleteMapping("/delete") //todo: do zastanowienia czy ten endpoint jest potrzebny
     public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {

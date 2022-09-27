@@ -13,7 +13,7 @@ public class ProductReviewMapper {
                 .topic(reviewDto.getTopic())
                 .description(reviewDto.getDescription())
                 .stars(reviewDto.getStars())
-                .product(null)
+//                .productId(null)
                 .user(null)
                 .build();
     }

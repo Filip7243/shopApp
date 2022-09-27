@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,10 +10,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -33,17 +36,16 @@ public class AppUser implements UserDetails, Serializable {
     private String password;
     private String phoneNumber;
     private String address;
-    @OneToMany(fetch = EAGER, cascade = ALL)
+    @JsonIgnore
+    @OneToMany(cascade = ALL, fetch = EAGER)
     private Set<AppUserRole> roles;
-    @OneToOne(mappedBy = "user", targetEntity = ShoppingCart.class)
-    private ShoppingCart shoppingCart;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
     private Boolean isExpired;
     private Boolean isLocked;
     private Boolean isCredentialsExpired;
     private Boolean isEnabled;
-
+ //TODO: ogólnie mam wszystko zrobione dobrze, tylko trzeba będzie lekko przemodelować db i bezie git wzsystko, nie jest to duzo roboty
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
@@ -79,11 +81,4 @@ public class AppUser implements UserDetails, Serializable {
         return isEnabled;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
-    }
-
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-    }
 }

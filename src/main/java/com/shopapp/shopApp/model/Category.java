@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import java.io.Serializable;
 
@@ -24,4 +25,5 @@ public class Category {
     private String categoryName;
     private String description;
     private String imageUrl;
+
 }

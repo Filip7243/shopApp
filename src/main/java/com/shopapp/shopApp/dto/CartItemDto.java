@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,6 +18,6 @@ public class CartItemDto {
     private String desc;
     private String imageUrl;
     private Integer quantity;
-    private String categoryName;
+    private List<String> categoryName;
 
 }

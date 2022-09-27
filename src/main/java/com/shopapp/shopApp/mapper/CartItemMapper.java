@@ -2,7 +2,10 @@ package com.shopapp.shopApp.mapper;
 
 import com.shopapp.shopApp.dto.CartItemDto;
 import com.shopapp.shopApp.model.CartItem;
+import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;
+
+import java.util.List;
 
 public class CartItemMapper {
 
@@ -13,6 +16,10 @@ public class CartItemMapper {
                 product.getDescription(),
                 product.getImageUrl(),
                 item.getQuantity(),
-                product.getCategory().getCategoryName());
+                getCategoriesNames(product.getCategories()));
+    }
+
+    public static List<String> getCategoriesNames(List<Category> categories) {
+        return categories.stream().map(Category::getCategoryName).toList();
     }
 }

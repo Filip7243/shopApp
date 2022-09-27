@@ -31,8 +31,8 @@ public class ProductReviewController {
 
     private final ProductReviewServiceImpl reviewService;
     private final JwtUtils jwtUtils;
-    private final ProductServiceImpl productService;
     private final AppUserServiceImpl appUserService;
+    private final ProductServiceImpl productService;
 
     @GetMapping("/show")
     public List<ProductReviewAddUpdateDto> getUserReviews(HttpServletRequest request) throws UserNotFoundException {
@@ -44,12 +44,14 @@ public class ProductReviewController {
     public ResponseEntity<?> addReview(@RequestBody @Valid ProductReviewAddUpdateDto reviewDto,
                                        @RequestParam String productCode,
                                        HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
+
         ProductReview productReview = mapToProductReview(reviewDto);
-        productReview.setProduct(productService.getProductWithProductCode(productCode));
+        productReview.setProductId(productService.getProductWithProductCode(productCode).getId());
         AppUser user = getUser(request);
         productReview.setUser(user);
         reviewService.addReview(productReview);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format(PRODUCT_REVIEW_CREATED, productCode, user.getEmail()));
+        //TODO: prevent multiple reviews
     }
 
     @PutMapping("/update")

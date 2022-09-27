@@ -4,6 +4,7 @@ import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ProductReview;
+import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND
 public class ProductReviewServiceImpl implements ProductReviewService {
 
     private final ProductReviewRepository reviewRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<ProductReviewAddUpdateDto> getUserReviews(AppUser user) {

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.WISH_LIST_NOT_FOUND;
 
@@ -62,7 +63,7 @@ public class WishListServiceImpl implements WishListService {
             String username = jwtUtils.getUsernameFromJwtToken(token);
             user = (AppUser) appUserService.loadUserByUsername(username);
             wishListCode = createWishList(user.getUserCode());
-        }
+        }//TODO: reformat
 
         WishList wishList = getWishList(wishListCode);
         Set<Product> wishListItems = wishList.getWishListItems();
@@ -79,7 +80,7 @@ public class WishListServiceImpl implements WishListService {
         return getWishList(wishListCode).getWishListItems();
     }
 
-    private WishList getWishList(String wishListCode) {
+    public WishList getWishList(String wishListCode) {
         return wishListRepository.findByWishListCode(wishListCode)
                 .orElseThrow(() -> new WishListNotFoundException(WISH_LIST_NOT_FOUND));
     }

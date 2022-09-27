@@ -29,7 +29,7 @@ public class AppUserController {
 
     private final AppUserServiceImpl userService;
     private final JwtUtils jwtUtils;
-    //TODO: paginator
+    //TODO: paginator, roles
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
         List<AppUserDisplayDto> users = mapToAppUserDisplayDto(userService.getUsers());
