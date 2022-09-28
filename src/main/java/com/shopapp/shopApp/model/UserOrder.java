@@ -20,7 +20,6 @@ public class UserOrder {
     private String orderCode;
     private String cartCode;
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn
     private List<CartItem> orderedItems;
     private LocalDateTime orderedAt;
     private Boolean hasPaid;
