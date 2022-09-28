@@ -44,10 +44,10 @@ public class ShoppingCartController {
         return ResponseEntity.ok(ShoppingCartMapper.mapToShoppingCartDto(shoppingCart));
     }
 
-    @GetMapping("/items/{shoppingCartCode}")
-    public ResponseEntity<List<CartItem>> getItemsFromShoppingCart(@PathVariable String shoppingCartCode) throws ShoppingCartNotFoundException {
-        return ResponseEntity.ok(shoppingCartService.getItemsFromShoppingCart(shoppingCartCode));
-    }//todo;shopping cart
+//    @GetMapping("/items/{shoppingCartCode}")
+//    public ResponseEntity<List<CartItem>> getItemsFromShoppingCart(@PathVariable String shoppingCartCode) throws ShoppingCartNotFoundException {
+//        return ResponseEntity.ok(shoppingCartService.getItemsFromShoppingCart(shoppingCartCode));
+//    }
 
     @PostMapping("/user/add")
     public ResponseEntity<?> addUserToShoppingCart(@RequestParam String shoppingCartCode, HttpServletRequest request)
@@ -56,7 +56,7 @@ public class ShoppingCartController {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
         AppUser user = (AppUser) userService.loadUserByUsername(username);
-        shoppingCartService.addUserToShoppingCart(shoppingCartCode, user.getUserCode());
+        shoppingCartService.addUserToShoppingCart(shoppingCartCode, user);
         return ResponseEntity.ok(String.format(USER_ADDED_TO_SHOPPING_CART, user.getEmail(), shoppingCartCode));
     }
 

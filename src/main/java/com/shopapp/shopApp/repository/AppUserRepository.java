@@ -11,8 +11,7 @@ import java.util.Optional;
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
-    @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.email = :email")
-        // I don't need to use DISTINCT because I store roles in Set
+    @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.email = :email") // I don't need to use DISTINCT because I store roles in Set
     Optional<AppUser> findByEmail(String email);
 
     Optional<AppUser> findByUserCode(String userCode);

@@ -62,8 +62,8 @@ public class SecurityConfig {
         http.authorizeRequests().antMatchers("/api/roles/delete/{roleName}").hasAuthority(SUPER_ADMIN);
         http.authorizeRequests().antMatchers("/api/roles/update/{roleName}").hasAuthority(SUPER_ADMIN);
         // requests from /api/auth
-        http.authorizeRequests().antMatchers("/api/auth/signIn").hasAuthority(ANONYMOUS);
-        http.authorizeRequests().antMatchers("/api/auth/signUp").hasAuthority(ANONYMOUS);
+        http.authorizeRequests().antMatchers("/api/auth/signIn").permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/signUp").permitAll();
         http.authorizeRequests().antMatchers("/api/auth/confirm").permitAll();
         // requests from /api/categories
         http.authorizeRequests().antMatchers("/api/categories/all").hasAnyAuthority(SUPER_ADMIN, ADMIN, MANAGER);

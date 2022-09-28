@@ -1,7 +1,9 @@
 package com.shopapp.shopApp.service.product;
 
+import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
+import com.shopapp.shopApp.mapper.ProductMapper;
 import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.ProductReview;
@@ -25,12 +27,14 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductReviewRepository reviewRepository;
 
-    public List<Product> getAllProducts() {
+    @Override
+    public List<ProductDisplayDto> getAllProducts() {
         List<Product> allProducts = productRepository.findAll();
         List<Long> ids = allProducts.stream().map(Product::getId).toList();
         List<ProductReview> reviews = reviewRepository.findAllByProductIdIn(ids);
         allProducts.forEach(product -> product.setReviews(extractReviewsFromProduct(reviews, product.getId())));
-        return allProducts;
+
+        return allProducts.stream().map(ProductMapper::mapToProductDisplayDto).toList();
     }
 
     private List<ProductReview> extractReviewsFromProduct(List<ProductReview> reviews, Long id) {
@@ -39,10 +43,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void addProduct(Product product) {
-//        String productCode = product.getProductCode();
-//        if(productRepository.existsByProductCode(productCode)) {
-//            throw new ProductExistsException(String.format(PRODUCT_ALREADY_EXISTS, product.getName())); //TODO: non sense
-//        }
         productRepository.save(product);
     }
 
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductWithProductCode(productCode);
         Category category = categoryRepository.findByCategoryName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND, categoryName)));
-        product.getCategories().add(category);//TODO:
+        product.getCategories().add(category);
 
         productRepository.save(product);
     }

@@ -59,9 +59,10 @@ public class WishListController {
 
         wishListService.deleteProductFromWishList(wishListCode, productCode);
         return ResponseEntity.ok(String.format(WISH_LIST_PRODUCT_DELETED, productCode));
-    }//TODO: shopping cart po strone usera w mouelu, o tego przy wyswietlaniu itemow mniej inforamcji(koszyk), itd..
+    }
 
-    @DeleteMapping("/delete") //todo: do zastanowienia czy ten endpoint jest potrzebny
+    // only for super-admin
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);

@@ -24,5 +24,6 @@ public class WishList {
     private Set<Product> wishListItems;
     @JsonIgnore
     @OneToOne(fetch = LAZY)
+    @JoinColumn
     private AppUser user;
 }

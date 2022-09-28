@@ -17,5 +17,5 @@ public class ProductDisplayDto {
     private String description;
     private Double price;
     private String imageUrl;
-    private List<String> categoryName;
+    private List<String> categoryNames;
 }

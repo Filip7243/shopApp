@@ -24,7 +24,7 @@ public class ShoppingCart {
     private Long id;
     private String shoppingCartCode;
     @JsonIgnore // i don't want to display info about user from shopping cart
-    @OneToOne(fetch = LAZY, targetEntity = AppUser.class)
+    @ManyToOne(fetch = LAZY)
     private AppUser user;
     @OneToMany(fetch = LAZY)
     @JoinColumn(name = "cartId")

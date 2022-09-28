@@ -62,7 +62,7 @@ public class WishListServiceImpl implements WishListService {
             String username = jwtUtils.getUsernameFromJwtToken(token);
             user = (AppUser) appUserService.loadUserByUsername(username);
             wishListCode = createWishList(user.getUserCode());
-        }//TODO: reformat
+        }
 
         WishList wishList = getWishList(wishListCode);
         Set<Product> wishListItems = wishList.getWishListItems();

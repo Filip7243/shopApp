@@ -48,18 +48,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void addUserToShoppingCart(String shoppingCartCode, String appUserCode) {
-        AppUser user = userRepository.findByUserCode(appUserCode)
-                .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, appUserCode)));
+    public void addUserToShoppingCart(String shoppingCartCode, AppUser user) {
         ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
-//        if(user.getShoppingCart() != null) {
-//            throw new IllegalStateException("User already have shoppingCart");
-//        }
 
         shoppingCart.setUser(user);
         cartRepository.save(shoppingCart);
-
     }
 
     @Override

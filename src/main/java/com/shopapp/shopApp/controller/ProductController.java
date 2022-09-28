@@ -1,5 +1,6 @@
 package com.shopapp.shopApp.controller;
 
+import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
 import com.shopapp.shopApp.exception.category.CategoryNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductExistsException;
@@ -25,9 +26,9 @@ public class ProductController {
     private final ProductServiceImpl productService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getProducts() {
+    public ResponseEntity<List<ProductDisplayDto>> getProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
-    }//TODO: maybe product display dto
+    }
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody @Valid ProductSaveUpdateDto product) throws ProductExistsException {
