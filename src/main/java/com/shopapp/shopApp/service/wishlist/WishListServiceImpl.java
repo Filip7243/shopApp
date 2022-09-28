@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.WISH_LIST_NOT_FOUND;
 
@@ -58,7 +57,7 @@ public class WishListServiceImpl implements WishListService {
     @Override
     public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
         AppUser user = null;
-        if(!wishListRepository.existsByWishListCode(wishListCode)) {
+        if (!wishListRepository.existsByWishListCode(wishListCode)) {
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
             user = (AppUser) appUserService.loadUserByUsername(username);
@@ -68,7 +67,7 @@ public class WishListServiceImpl implements WishListService {
         WishList wishList = getWishList(wishListCode);
         Set<Product> wishListItems = wishList.getWishListItems();
         Product product = productService.getProductWithProductCode(productCode);
-        if(wishListItems.contains(product)) {
+        if (wishListItems.contains(product)) {
             return;
         }
         wishListItems.add(product);

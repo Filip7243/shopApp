@@ -1,9 +1,8 @@
 package com.shopapp.shopApp.mapper;
 
 import com.shopapp.shopApp.model.CartItem;
-import com.shopapp.shopApp.model.UserOrder;
 import com.shopapp.shopApp.model.ShoppingCart;
-import org.springframework.security.core.userdetails.User;
+import com.shopapp.shopApp.model.UserOrder;
 
 import java.time.LocalDateTime;
 import java.util.List;

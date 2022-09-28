@@ -1,7 +1,5 @@
 package com.shopapp.shopApp.dto;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
-import com.shopapp.shopApp.constants.ValidationConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

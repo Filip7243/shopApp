@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ShoppingCartDto;
 import com.shopapp.shopApp.exception.product.CartItemNotFoundException;
 import com.shopapp.shopApp.exception.product.NotEnoughInStockException;
@@ -16,7 +15,6 @@ import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

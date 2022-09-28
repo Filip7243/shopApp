@@ -4,9 +4,6 @@ import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
-import com.shopapp.shopApp.model.ShoppingCart;
-import com.shopapp.shopApp.security.CustomPasswordEncoder;
-import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

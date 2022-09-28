@@ -1,10 +1,7 @@
 package com.shopapp.shopApp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 

@@ -2,8 +2,8 @@ package com.shopapp.shopApp.service.order;
 
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.exception.order.OrderNotFoundException;
-import com.shopapp.shopApp.model.UserOrder;
 import com.shopapp.shopApp.model.ShoppingCart;
+import com.shopapp.shopApp.model.UserOrder;
 import com.shopapp.shopApp.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

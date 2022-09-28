@@ -2,7 +2,6 @@ package com.shopapp.shopApp.mapper;
 
 import com.shopapp.shopApp.dto.CartItemDto;
 import com.shopapp.shopApp.model.CartItem;
-import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;
 
 import java.util.List;
@@ -18,7 +17,6 @@ public class CartItemMapper {
                 item.getQuantity()
         );
     }
-
 
     public static List<CartItemDto> mapToDtoList(List<CartItem> items) {
         return items.stream()

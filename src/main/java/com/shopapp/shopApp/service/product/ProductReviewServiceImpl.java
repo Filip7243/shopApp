@@ -4,7 +4,6 @@ import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ProductReview;
-import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

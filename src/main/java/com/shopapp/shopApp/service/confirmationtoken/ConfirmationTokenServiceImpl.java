@@ -19,7 +19,7 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
+public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
 
     private final ConfirmationTokenRepository tokenRepository;
     private final AppUserRepository userRepository;
@@ -49,15 +49,15 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService{
     @Override
     public void confirmEmail(ConfirmationToken confirmationToken) {
 
-        if(!tokenRepository.existsByToken(confirmationToken.getToken())) {
+        if (!tokenRepository.existsByToken(confirmationToken.getToken())) {
             throw new ConfirmationTokenNotFoundException(TOKEN_NOT_FOUND);
         }
 
-        if(confirmationToken.getIsConfirmed()) {
+        if (confirmationToken.getIsConfirmed()) {
             throw new ConfirmationTokenConfirmedException(String.format(TOKEN_CONFIRMED, confirmationToken));
         }
 
-        if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new ConfirmationTokenExpiredException(String.format(TOKEN_EXPIRED, confirmationToken.getExpiresAt().toString()));
         }
 

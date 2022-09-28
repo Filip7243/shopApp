@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class EmailSenderImpl implements EmailSender{
+public class EmailSenderImpl implements EmailSender {
 
     private final JavaMailSender javaMailSender;
 

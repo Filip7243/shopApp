@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.AppUserRoleSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
@@ -8,14 +7,9 @@ import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.service.appuser.AppUserRoleServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;

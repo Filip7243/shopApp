@@ -15,7 +15,7 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.CATEGORY_NOT_FOU
 
 @Service
 @AllArgsConstructor
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void addCategory(Category category) {
         String name = category.getCategoryName();
-        if(categoryRepository.existsByCategoryName(name)) {
+        if (categoryRepository.existsByCategoryName(name)) {
             throw new CategoryExistsException(String.format(CATEGORY_ALREADY_EXISTS, category.getCategoryName()));
         }
         categoryRepository.save(category);
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public void deleteCategoryWithId(Long id) {
-        if(categoryRepository.existsById(id)) {
+        if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
         } else {
             throw new CategoryNotFoundException(String.format(CATEGORY_NOT_FOUND, "with id: " + id));

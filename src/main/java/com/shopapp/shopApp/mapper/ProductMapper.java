@@ -4,10 +4,8 @@ import com.shopapp.shopApp.dto.ProductDisplayDto;
 import com.shopapp.shopApp.dto.ProductSaveUpdateDto;
 import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;
-import org.apache.catalina.LifecycleState;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;

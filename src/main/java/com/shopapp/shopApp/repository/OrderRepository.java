@@ -11,7 +11,9 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<UserOrder, Long> {
     Optional<UserOrder> findByOrderCode(String orderCode);
+
     Optional<UserOrder> deleteByOrderCode(String orderCode);
+
     @Override
     @Query("SELECT DISTINCT o FROM UserOrder o JOIN FETCH o.orderedItems")
     List<UserOrder> findAll();

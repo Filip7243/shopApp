@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
@@ -29,6 +28,7 @@ public class AppUserController {
 
     private final AppUserServiceImpl userService;
     private final JwtUtils jwtUtils;
+
     //TODO: paginator, roles
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {

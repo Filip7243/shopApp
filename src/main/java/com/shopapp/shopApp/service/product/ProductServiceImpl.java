@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.CATEGORY_NOT_FOUND;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.PRODUCT_NOT_FOUND;
 
 @Service
 @AllArgsConstructor

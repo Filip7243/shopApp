@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.dto;
 
-import com.shopapp.shopApp.model.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

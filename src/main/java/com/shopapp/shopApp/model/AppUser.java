@@ -6,16 +6,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -45,7 +46,7 @@ public class AppUser implements UserDetails, Serializable {
     private Boolean isLocked;
     private Boolean isCredentialsExpired;
     private Boolean isEnabled;
- //TODO: ogólnie mam wszystko zrobione dobrze, tylko trzeba będzie lekko przemodelować db i bezie git wzsystko, nie jest to duzo roboty
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();

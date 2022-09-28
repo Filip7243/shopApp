@@ -14,7 +14,7 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.PRODUCT_NOT_FOUN
 
 @Service
 @AllArgsConstructor
-public class CartItemServiceImpl implements CartItemService{
+public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository itemRepository;
     private final ProductRepository productRepository;
@@ -26,7 +26,7 @@ public class CartItemServiceImpl implements CartItemService{
 
     @Override
     public CartItem createCartItem(Product product) {
-        if(productRepository.existsByProductCode(product.getProductCode())) {
+        if (productRepository.existsByProductCode(product.getProductCode())) {
             CartItem item = new CartItem();
             item.setQuantity(0);
             item.setProduct(product);

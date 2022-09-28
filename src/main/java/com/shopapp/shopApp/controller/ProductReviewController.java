@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.controller;
 
-import com.shopapp.shopApp.constants.ResponseConstants;
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
@@ -46,7 +45,7 @@ public class ProductReviewController {
                                        HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
 
         AppUser user = getUser(request);
-        if(reviewService.findByUser(user) != null) {
+        if (reviewService.findByUser(user) != null) {
             return ResponseEntity.badRequest().body("You already write review");
         }
         ProductReview productReview = mapToProductReview(reviewDto);
