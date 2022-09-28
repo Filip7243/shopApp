@@ -18,6 +18,6 @@ public class CartItemDto {
     private String desc;
     private String imageUrl;
     private Integer quantity;
-    private List<String> categoryName;
+//    private List<String> categoryName;
 
 }

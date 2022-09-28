@@ -15,11 +15,8 @@ public class CartItemMapper {
                 product.getName(),
                 product.getDescription(),
                 product.getImageUrl(),
-                item.getQuantity(),
-                getCategoriesNames(product.getCategories()));
+                item.getQuantity()
+        );
     }
 
-    public static List<String> getCategoriesNames(List<Category> categories) {
-        return categories.stream().map(Category::getCategoryName).toList();
-    }
 }
