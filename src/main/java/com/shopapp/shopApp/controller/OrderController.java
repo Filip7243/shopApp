@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.ORDER_DELETED;
+import static com.shopapp.shopApp.mapper.CartItemMapper.mapToDtoList;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.GONE;
 
@@ -37,7 +38,7 @@ public class OrderController {
                 user.getPhoneNumber(),
                 user.getAddress(),
                 user.getEmail(),
-                shoppingCart.getItems().stream().map(CartItemMapper::mapToDto).toList(),
+                mapToDtoList(shoppingCart.getItems()),
                 shoppingCart.getTotalPrice()
         ));
     }
