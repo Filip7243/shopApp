@@ -5,17 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -32,7 +26,8 @@ public class ShoppingCart {
     @JsonIgnore // i don't want to display info about user from shopping cart
     @OneToOne(fetch = LAZY, targetEntity = AppUser.class)
     private AppUser user;
-    @OneToMany(fetch = EAGER)
+    @OneToMany(fetch = LAZY)
+    @JoinColumn(name = "cartId")
     private List<CartItem> items;
     private LocalDateTime createdAt;
     private Double totalPrice;

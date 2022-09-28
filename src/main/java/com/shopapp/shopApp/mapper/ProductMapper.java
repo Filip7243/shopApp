@@ -42,5 +42,5 @@ public class ProductMapper {
         return products.stream()
                 .map(ProductMapper::mapToProductDisplayDto)
                 .collect(Collectors.toSet());
-    }//todo: ogarnac jak ladowac kateogire jednym zapytaniem
+    }
 }

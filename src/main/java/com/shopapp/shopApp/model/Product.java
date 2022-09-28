@@ -18,7 +18,7 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product  {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +30,11 @@ public class Product  {
     private Integer inStock;
     private String imageUrl;
     @ManyToMany(fetch = LAZY)
-    @BatchSize(size = 10) //
+    @BatchSize(size = 10)
     private List<Category> categories;
     @OneToMany
     @JoinColumn(name = "productId")
+    @BatchSize(size = 50)
     private List<ProductReview> reviews;
 
 }

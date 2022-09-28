@@ -34,7 +34,7 @@ public class WishListController {
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
         return ResponseEntity.ok(getSetOfProductsDto(wishListService.getProducts(wishListCode)));
-    }//todo; ogarnac jak zrobic zeby katergorie wyswetlalo w jednym zapytaniu
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createWishList(HttpServletRequest request) throws UserNotFoundException {

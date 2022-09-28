@@ -27,7 +27,7 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
-    }//TODO: product display dto
+    }//TODO: maybe product display dto
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestBody @Valid ProductSaveUpdateDto product) throws ProductExistsException {

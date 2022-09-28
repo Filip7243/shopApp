@@ -9,6 +9,7 @@ import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.CartItem;
+import com.shopapp.shopApp.model.ShoppingCart;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
@@ -37,10 +38,15 @@ public class ShoppingCartController {
         return ResponseEntity.ok(shoppingCartService.createShoppingCart());
     }
 
+    @GetMapping("/show")
+    public ResponseEntity<ShoppingCart> getShoppingCart(@RequestParam String shoppingCartCode) {
+        return ResponseEntity.ok(shoppingCartService.getShoppingCart(shoppingCartCode));
+    }
+
     @GetMapping("/items/{shoppingCartCode}")
     public ResponseEntity<List<CartItem>> getItemsFromShoppingCart(@PathVariable String shoppingCartCode) throws ShoppingCartNotFoundException {
         return ResponseEntity.ok(shoppingCartService.getItemsFromShoppingCart(shoppingCartCode));
-    }
+    }//todo;shopping cart
 
     @PostMapping("/user/add")
     public ResponseEntity<?> addUserToShoppingCart(@RequestParam String shoppingCartCode, HttpServletRequest request)

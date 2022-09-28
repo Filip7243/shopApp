@@ -26,7 +26,7 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 @Service
 @Transactional
 @AllArgsConstructor
-public class ShoppingCartServiceImpl implements ShoppingCartService{
+public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository cartRepository;
     private final CartItemServiceImpl itemService;
@@ -62,8 +62,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public List<CartItem> getItemsFromShoppingCart(String shoppingCartCode) {
-        ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
+        ShoppingCart shoppingCart = getShoppingCart(shoppingCartCode);
         return shoppingCart.getItems(); //TODO: DTO DISPLAY
     }
 
@@ -75,14 +74,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
 
         CartItem item = itemService.createCartItem(product);
+        item.setCartId(shoppingCart.getId());
 
-        if(quantity > item.getProduct().getInStock()) {
+        if (quantity > item.getProduct().getInStock()) {
             throw new NotEnoughInStockException(NOT_ENOUGH_IN_STOCK);
         }
 
         List<CartItem> items = shoppingCart.getItems();
-        for(CartItem cartItem : items) {
-            if(cartItem.getProduct().getProductCode().equals(item.getProduct().getProductCode())) {
+        for (CartItem cartItem : items) {
+            if (cartItem.getProduct().getProductCode().equals(item.getProduct().getProductCode())) {
                 item.getProduct().setInStock(item.getProduct().getInStock() - quantity); // TODO: to idzie do order complete
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
                 shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + item.getProduct().getPrice());
