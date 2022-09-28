@@ -19,4 +19,10 @@ public class CartItemMapper {
         );
     }
 
+
+    public static List<CartItemDto> mapToDtoList(List<CartItem> items) {
+        return items.stream()
+                .map(CartItemMapper::mapToDto)
+                .toList();
+    }
 }
