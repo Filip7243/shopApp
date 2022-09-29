@@ -6,17 +6,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
@@ -38,7 +37,7 @@ public class AppUser implements UserDetails, Serializable {
     private String phoneNumber;
     private String address;
     @JsonIgnore
-    @OneToMany(cascade = ALL, fetch = EAGER)
+    @ManyToMany(fetch = LAZY)
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;

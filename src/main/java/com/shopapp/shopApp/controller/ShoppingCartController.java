@@ -7,9 +7,7 @@ import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
-import com.shopapp.shopApp.mapper.ShoppingCartMapper;
 import com.shopapp.shopApp.model.AppUser;
-import com.shopapp.shopApp.model.CartItem;
 import com.shopapp.shopApp.model.ShoppingCart;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
@@ -19,9 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 import static com.shopapp.shopApp.constants.ResponseConstants.*;
+import static com.shopapp.shopApp.mapper.ShoppingCartMapper.mapToShoppingCartDto;
 import static org.springframework.http.HttpStatus.GONE;
 
 @RestController
@@ -39,9 +37,9 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/show")
-    public ResponseEntity<ShoppingCartDto> getShoppingCart(@RequestParam String shoppingCartCode) {
+    public ResponseEntity<ShoppingCartDto> getShoppingCart(@RequestParam String shoppingCartCode) throws ShoppingCartNotFoundException{
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(shoppingCartCode);
-        return ResponseEntity.ok(ShoppingCartMapper.mapToShoppingCartDto(shoppingCart));
+        return ResponseEntity.ok(mapToShoppingCartDto(shoppingCart));
     }
 
 //    @GetMapping("/items/{shoppingCartCode}")
