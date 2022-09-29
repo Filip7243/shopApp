@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 import static com.shopapp.shopApp.mapper.AppUserMapper.mapToAppUser;
@@ -77,8 +78,13 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser appUser = getUserWithUserCode(userCode);
         AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
-        appUser.getRoles().add(role);
-        userRepository.save(appUser);
+        Set<AppUserRole> roles = appUser.getRoles();
+        if(!roles.contains(role)) {
+            roles.add(role);
+            userRepository.save(appUser);
+        } else {
+            throw new IllegalStateException(String.format(ROLE_ALREADY_EXISTS, role.getName()));
+        }
     }
 
     public AppUser getUserWithUserCode(String userCode) {

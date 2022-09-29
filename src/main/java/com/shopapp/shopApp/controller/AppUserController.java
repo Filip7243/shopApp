@@ -29,7 +29,6 @@ public class AppUserController {
     private final AppUserServiceImpl userService;
     private final JwtUtils jwtUtils;
 
-    //TODO: paginator, roles
     @GetMapping("/all")
     public ResponseEntity<List<AppUserDisplayDto>> getUsers() {
         List<AppUserDisplayDto> users = mapToAppUserDisplayDto(userService.getUsers());
@@ -57,7 +56,7 @@ public class AppUserController {
 
     @PostMapping("/roles/add")
     public ResponseEntity<?> addRoleToUser(@RequestParam String userCode, @RequestParam String roleName)
-            throws UserCodeNotFoundException, RoleNotFoundException {
+            throws UserCodeNotFoundException, RoleNotFoundException, IllegalStateException {
         userService.addRoleToUser(userCode, roleName);
         return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
     }
