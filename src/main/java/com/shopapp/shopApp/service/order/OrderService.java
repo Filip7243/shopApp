@@ -12,6 +12,6 @@ public interface OrderService {
     void createOrder(ShoppingCart shoppingCart);
     void updateOrder(String orderCode, UserOrderDto orderDto);
     void deleteOrder(String orderCode);
-
-    UserOrder getOrder(String shoppingCartCode);
+    UserOrder getOrder(String orderCode);
+    void completeOrder(String orderCode);
 }

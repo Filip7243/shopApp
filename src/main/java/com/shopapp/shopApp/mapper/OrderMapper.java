@@ -14,16 +14,12 @@ public class OrderMapper {
         return UserOrder.builder()
                 .id(null)
                 .orderCode(UUID.randomUUID().toString())
-//                .cartCode(shoppingCart.getShoppingCartCode())
                 .cart(shoppingCart)
-                .orderedItems(getCartItems(shoppingCart))
                 .orderedAt(LocalDateTime.now())
                 .hasPaid(false)
                 .totalPrice(shoppingCart.getTotalPrice())
+                .isDelivered(false)
                 .build();
     }
-//todo; wishlist
-    private static List<CartItem> getCartItems(ShoppingCart shoppingCart) {
-        return shoppingCart.getItems().stream().toList();
-    }
+
 }

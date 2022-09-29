@@ -43,6 +43,12 @@ public class OrderController {
         ));
     }
 
+    @PostMapping("/complete")
+    public ResponseEntity<?> completeOrder(@RequestParam String orderCode) throws OrderNotFoundException{
+        orderService.completeOrder(orderCode);
+        return ResponseEntity.status(CREATED).body("ORDER COMPLETED");
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> updateOrder(@RequestParam String orderCode, @RequestBody UserOrderDto userOrderDto) {
         return null; //TODO: when ui

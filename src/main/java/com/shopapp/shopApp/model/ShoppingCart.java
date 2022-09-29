@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ public class ShoppingCart {
     private AppUser user;
     @OneToMany(fetch = LAZY)
     @JoinColumn(name = "cartId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<CartItem> items;
     private LocalDateTime createdAt;
     private Double totalPrice;

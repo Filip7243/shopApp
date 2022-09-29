@@ -19,11 +19,12 @@ public class UserOrder {
     private Long id;
     private String orderCode;
 //    private String cartCode;
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<CartItem> orderedItems;
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private List<CartItem> orderedItems;
     @OneToOne(fetch = FetchType.LAZY)
     private ShoppingCart cart;
     private LocalDateTime orderedAt;
     private Boolean hasPaid;
     private Double totalPrice;
+    private Boolean isDelivered;
 }

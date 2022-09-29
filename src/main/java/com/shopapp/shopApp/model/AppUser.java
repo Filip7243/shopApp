@@ -37,7 +37,7 @@ public class AppUser implements UserDetails, Serializable {
     private String phoneNumber;
     private String address;
     @JsonIgnore
-    @ManyToMany(fetch = LAZY)
+    @ManyToMany(fetch = LAZY, cascade = ALL)
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;

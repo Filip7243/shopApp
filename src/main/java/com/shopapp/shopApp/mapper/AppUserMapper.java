@@ -24,7 +24,7 @@ public class AppUserMapper {
                 .password(user.getPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
-                .roles(Set.of(new AppUserRole(null, "ROLE_SUPER_ADMIN", "User can READ")))
+                .roles(Set.of(new AppUserRole(null, "ROLE_NEW", "User can READ")))//todo; roles adding
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusYears(1))
                 .isExpired(false)
