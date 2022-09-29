@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
@@ -23,7 +24,7 @@ import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 public class ConfirmationToken {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String token;
     private LocalDateTime createdAt;

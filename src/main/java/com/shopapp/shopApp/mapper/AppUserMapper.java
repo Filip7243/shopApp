@@ -6,10 +6,7 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AppUserMapper {
@@ -24,7 +21,7 @@ public class AppUserMapper {
                 .password(user.getPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
-                .roles(Set.of(new AppUserRole(null, "ROLE_NEW", "User can READ")))//todo; roles adding
+                .roles(new HashSet<>())//todo; roles adding
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusYears(1))
                 .isExpired(false)
