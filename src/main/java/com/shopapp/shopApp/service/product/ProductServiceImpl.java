@@ -11,6 +11,7 @@ import com.shopapp.shopApp.repository.CategoryRepository;
 import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductReviewRepository reviewRepository;
 
     @Override
-    public List<ProductDisplayDto> getAllProducts() {
-        List<Product> allProducts = productRepository.findAll();
+    public List<ProductDisplayDto> getAllProducts(int page) {
+        List<Product> allProducts = productRepository.findAllProducts(PageRequest.of(page, 5));
         List<Long> ids = allProducts.stream().map(Product::getId).toList();
         List<ProductReview> reviews = reviewRepository.findAllByProductIdIn(ids);
         allProducts.forEach(product -> product.setReviews(extractReviewsFromProduct(reviews, product.getId())));

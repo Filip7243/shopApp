@@ -1,6 +1,7 @@
 package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.model.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Override
     @Query("SELECT DISTINCT p FROM Product p JOIN FETCH p.categories")
     List<Product> findAll();
+    @Query("SELECT p FROM Product p")
+    List<Product> findAllProducts(Pageable pageable);
 
 }

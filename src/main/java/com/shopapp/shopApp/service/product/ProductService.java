@@ -16,5 +16,5 @@ public interface ProductService {
 
     void addCategoryToProduct(String productCode, String categoryName);
 
-    List<ProductDisplayDto> getAllProducts();
+    List<ProductDisplayDto> getAllProducts(int page);
 }

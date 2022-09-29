@@ -18,4 +18,5 @@ public class ProductDisplayDto {
     private Double price;
     private String imageUrl;
     private List<String> categoryNames;
+    private Integer reviewsNumber;
 }

@@ -26,8 +26,8 @@ public class ProductController {
     private final ProductServiceImpl productService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProductDisplayDto>> getProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductDisplayDto>> getProducts(@RequestParam int page) {
+        return ResponseEntity.ok(productService.getAllProducts(page));
     }
 
     @PostMapping("/add")

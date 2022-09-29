@@ -29,6 +29,7 @@ public class ProductMapper {
                 .price(product.getPrice())
                 .imageUrl(product.getImageUrl())
                 .categoryNames(getCategoriesNames(product.getCategories()))
+                .reviewsNumber(product.getReviews().size())
                 .build();
     }
 
