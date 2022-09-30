@@ -6,6 +6,7 @@ import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.exception.wishlist.WishListNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
+import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import com.shopapp.shopApp.service.wishlist.WishListServiceImpl;
@@ -29,8 +30,7 @@ public class WishListController {
 
     private final WishListServiceImpl wishListService;
     private final JwtUtils jwtUtils;
-    private final AppUserServiceImpl userService;
-
+    private final AppUserRepository userRepository;
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
         return ResponseEntity.ok(getSetOfProductsDto(wishListService.getProducts(wishListCode)));
@@ -40,7 +40,7 @@ public class WishListController {
     public ResponseEntity<?> createWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
-        AppUser user = (AppUser) userService.loadUserByUsername(username);
+        AppUser user = userRepository.findByEmail(username).orElseThrow();
         wishListService.createWishList(user.getUserCode());
         return ResponseEntity.created(URI.create(request.getRequestURI())).body(WISH_LIST_CREATED);
     }
@@ -66,7 +66,7 @@ public class WishListController {
     public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
-        AppUser user = (AppUser) userService.loadUserByUsername(username);
+        AppUser user = userRepository.findByEmail(username).orElseThrow();
         wishListService.deleteWishList(user);
         return ResponseEntity.ok(WISH_LIST_DELETED);
     }

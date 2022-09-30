@@ -42,7 +42,6 @@ public class ShoppingCartController {
         return ResponseEntity.ok(mapToShoppingCartDto(shoppingCart));
     }
 
-
     @PostMapping("/user/add")
     public ResponseEntity<?> addUserToShoppingCart(@RequestParam String shoppingCartCode, HttpServletRequest request)
             throws UserCodeNotFoundException, ShoppingCartNotFoundException, IllegalStateException, UserNotFoundException {
