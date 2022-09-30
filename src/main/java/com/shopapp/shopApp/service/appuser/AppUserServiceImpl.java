@@ -87,6 +87,18 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         }
     }
 
+    @Override
+    public void deleteRoleFromUser(String userCode, String roleName) {
+        AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
+        AppUser user = getUserWithUserCode(userCode);
+        Set<AppUserRole> roles = user.getRoles();
+        if(!roles.contains(role)) {
+            throw new RoleNotFoundException("User don't have: " + roleName);
+        }
+        roles.remove(role);
+    }
+
     public AppUser getUserWithUserCode(String userCode) {
         return userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, userCode)));

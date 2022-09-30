@@ -61,6 +61,13 @@ public class AppUserController {
         return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
     }
 
+    @DeleteMapping("roles/delete")
+    public ResponseEntity<?> deleteRoleFromUser(@RequestParam String userCode, @RequestParam String roleName)
+            throws UserCodeNotFoundException, RoleNotFoundException, IllegalStateException {
+        userService.deleteRoleFromUser(userCode, roleName);
+        return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
+    }
+
     @GetMapping("/accessToken/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request) throws UserNotFoundException {
         String refreshToken = jwtUtils.getTokenFromHeader(request);

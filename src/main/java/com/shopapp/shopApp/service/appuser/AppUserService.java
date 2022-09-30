@@ -13,5 +13,7 @@ public interface AppUserService {
 
     void addRoleToUser(String userCode, String roleName);
 
+    void deleteRoleFromUser(String userCode, String roleName);
+
 
 }
