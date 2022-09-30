@@ -70,7 +70,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         List<CartItem> items = shoppingCart.getItems();
         for (CartItem cartItem : items) {
             if (cartItem.getProduct().getProductCode().equals(item.getProduct().getProductCode())) {
-                item.getProduct().setInStock(item.getProduct().getInStock() - quantity); // TODO: to idzie do order complete
+                //        item.getProduct().setInStock(item.getProduct().getInStock() - quantity);
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
                 shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + item.getProduct().getPrice());
                 cartRepository.save(shoppingCart);

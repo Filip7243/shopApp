@@ -2,6 +2,7 @@ package com.shopapp.shopApp.service.order;
 
 import com.shopapp.shopApp.dto.UserOrderDto;
 import com.shopapp.shopApp.exception.order.OrderNotFoundException;
+import com.shopapp.shopApp.model.CartItem;
 import com.shopapp.shopApp.model.ShoppingCart;
 import com.shopapp.shopApp.model.UserOrder;
 import com.shopapp.shopApp.repository.CartItemRepository;
@@ -10,6 +11,8 @@ import com.shopapp.shopApp.repository.ShoppingCartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.ORDER_NOT_FOUND;
 import static com.shopapp.shopApp.mapper.OrderMapper.mapToOrder;
@@ -54,9 +57,11 @@ public class OrderServiceImpl implements OrderService {
         UserOrder order = getOrder(orderCode);
         ShoppingCart cart = order.getCart();
 
+        List<CartItem> items = cart.getItems();
+        items.forEach(item ->  item.getProduct().setInStock(item.getProduct().getInStock() - item.getQuantity()));
         order.setHasPaid(true);
         itemRepository.deleteAllByCartId(cart.getId());
-        cart.getItems().clear();
+        items.clear();
         cart.setTotalPrice(0.0);
         orderRepository.save(order);
         shoppingCartRepository.save(cart);
