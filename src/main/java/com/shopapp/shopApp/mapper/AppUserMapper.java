@@ -21,7 +21,7 @@ public class AppUserMapper {
                 .password(user.getPassword())
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
-                .roles(new HashSet<>())//todo; roles adding
+                .roles(new HashSet<>())
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusYears(1))
                 .isExpired(false)
