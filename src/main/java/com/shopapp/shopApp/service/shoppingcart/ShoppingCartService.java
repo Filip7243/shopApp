@@ -12,8 +12,6 @@ public interface ShoppingCartService {
 
     void addUserToShoppingCart(String shoppingCartCode, AppUser user);
 
-    List<CartItem> getItemsFromShoppingCart(String shoppingCartCode);
-
     void addItemToShoppingCart(String shoppingCartCode, String productCode, Integer quantity);
 
     void deleteItemFromShoppingCart(String shoppingCartCode, Long itemId);

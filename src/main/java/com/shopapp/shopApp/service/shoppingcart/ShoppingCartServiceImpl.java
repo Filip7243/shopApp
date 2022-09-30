@@ -34,7 +34,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemServiceImpl itemService;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
-    private final AppUserRepository userRepository;
 
     @Override
     public ShoppingCart createShoppingCart() {
@@ -49,23 +48,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addUserToShoppingCart(String shoppingCartCode, AppUser user) {
-        ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
+        ShoppingCart shoppingCart = getShoppingCart(shoppingCartCode);
 
         shoppingCart.setUser(user);
         cartRepository.save(shoppingCart);
     }
 
     @Override
-    public List<CartItem> getItemsFromShoppingCart(String shoppingCartCode) {
-        ShoppingCart shoppingCart = getShoppingCart(shoppingCartCode);
-        return shoppingCart.getItems(); //TODO: DTO DISPLAY
-    }
-
-    @Override
     public void addItemToShoppingCart(String shoppingCartCode, String productCode, Integer quantity) {
-        ShoppingCart shoppingCart = cartRepository.findByShoppingCartCode(shoppingCartCode)
-                .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
+        ShoppingCart shoppingCart = getShoppingCart(shoppingCartCode);
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
 

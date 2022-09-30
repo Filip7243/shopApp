@@ -42,10 +42,6 @@ public class ShoppingCartController {
         return ResponseEntity.ok(mapToShoppingCartDto(shoppingCart));
     }
 
-//    @GetMapping("/items/{shoppingCartCode}")
-//    public ResponseEntity<List<CartItem>> getItemsFromShoppingCart(@PathVariable String shoppingCartCode) throws ShoppingCartNotFoundException {
-//        return ResponseEntity.ok(shoppingCartService.getItemsFromShoppingCart(shoppingCartCode));
-//    }
 
     @PostMapping("/user/add")
     public ResponseEntity<?> addUserToShoppingCart(@RequestParam String shoppingCartCode, HttpServletRequest request)
