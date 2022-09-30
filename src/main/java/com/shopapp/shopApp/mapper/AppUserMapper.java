@@ -27,22 +27,20 @@ public class AppUserMapper {
                 .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)
-                .isEnabled(true)
+                .isEnabled(false)
                 .build();
     }
 
     public static List<AppUserDisplayDto> mapToAppUserDisplayDto(List<AppUser> users) {
-        List<AppUserDisplayDto> displayDto = new ArrayList<>();
-        users.stream().map(user -> displayDto.add(
-                new AppUserDisplayDto(user.getName(),
-                        user.getLastName(),
-                        user.getEmail(),
-                        user.getPhoneNumber(),
-                        user.getAddress(),
-                        user.getUserCode(),
-                        user.getRoles())
+        return users.stream().map(user -> new AppUserDisplayDto(
+                user.getName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getAddress(),
+                user.getUserCode(),
+                user.getRoles()
         )).collect(Collectors.toList());
-        return displayDto;
     }
 
 }
