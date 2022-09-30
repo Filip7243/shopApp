@@ -76,8 +76,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     @Override
     public void addRoleToUser(String userCode, String roleName) {
         AppUser appUser = getUserWithUserCode(userCode);
-        AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
+        AppUserRole role = getAppUserRole(roleName);
         Set<AppUserRole> roles = appUser.getRoles();
         if(!roles.contains(role)) {
             roles.add(role);
@@ -89,8 +88,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 
     @Override
     public void deleteRoleFromUser(String userCode, String roleName) {
-        AppUserRole role = roleRepository.findAppUserRoleByName(roleName)
-                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
+        AppUserRole role = getAppUserRole(roleName);
         AppUser user = getUserWithUserCode(userCode);
         Set<AppUserRole> roles = user.getRoles();
         if(!roles.contains(role)) {
@@ -102,5 +100,10 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     public AppUser getUserWithUserCode(String userCode) {
         return userRepository.findByUserCode(userCode)
                 .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, userCode)));
+    }
+
+    private AppUserRole getAppUserRole(String roleName) {
+        return roleRepository.findAppUserRoleByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
     }
 }

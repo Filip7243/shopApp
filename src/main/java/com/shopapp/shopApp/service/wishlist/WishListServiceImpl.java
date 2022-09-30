@@ -6,6 +6,8 @@ import com.shopapp.shopApp.exception.wishlist.WishListNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.WishList;
+import com.shopapp.shopApp.repository.AppUserRepository;
+import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.WishListRepository;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
@@ -25,15 +27,15 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.WISH_LIST_NOT_FO
 public class WishListServiceImpl implements WishListService {
 
     private final WishListRepository wishListRepository;
-    private final AppUserServiceImpl appUserService;
-    private final ProductServiceImpl productService;
+    private final AppUserRepository userRepository;
+    private final ProductRepository productRepository;
     private final JwtUtils jwtUtils;
 
     @Override
     public String createWishList(String userCode) {
         WishList wishList = new WishList();
         wishList.setWishListCode(UUID.randomUUID().toString());
-        wishList.setUser(appUserService.getUserWithUserCode(userCode));
+        wishList.setUser(userRepository.findByUserCode(userCode).orElseThrow());
         wishList.setWishListItems(new HashSet<>());
         wishListRepository.save(wishList);
         return wishList.getWishListCode();
@@ -42,7 +44,7 @@ public class WishListServiceImpl implements WishListService {
     @Override
     public void deleteProductFromWishList(String wishListCode, String productCode) {
         WishList wishList = getWishList(wishListCode);
-        Product product = productService.getProductWithProductCode(productCode);
+        Product product = productRepository.findByProductCode(productCode).orElseThrow();
         wishList.getWishListItems().remove(product);
         wishListRepository.save(wishList);
     }
@@ -56,17 +58,17 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
-        AppUser user = null;
+        AppUser user;
         if (!wishListRepository.existsByWishListCode(wishListCode)) {
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
-            user = (AppUser) appUserService.loadUserByUsername(username);
+            user = userRepository.findByEmail(username).orElseThrow();
             wishListCode = createWishList(user.getUserCode());
         }
 
         WishList wishList = getWishList(wishListCode);
         Set<Product> wishListItems = wishList.getWishListItems();
-        Product product = productService.getProductWithProductCode(productCode);
+        Product product = productRepository.findByProductCode(productCode).orElseThrow();
         if (wishListItems.contains(product)) {
             return;
         }
