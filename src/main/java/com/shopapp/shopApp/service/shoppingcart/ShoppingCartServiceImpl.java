@@ -102,4 +102,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartRepository.findByShoppingCartCode(shoppingCartCode)
                 .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
     }
+
+    //todo; test all endpoints and create password forget
 }

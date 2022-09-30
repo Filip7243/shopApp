@@ -6,19 +6,13 @@ import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -35,7 +29,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (request.getServletPath().equals("/api/auth/signIn")
                 || request.getServletPath().equals("/api/auth/signUp")
                 || request.getServletPath().equals("/api/auth/confirm")
-                || request.getServletPath().equals("/api/users/accessToken/refresh")) {
+                || request.getServletPath().equals("/api/users/accessToken/refresh")
+                || request.getServletPath().equals("/api/auth/password/forget")
+                || request.getServletPath().equals("/api/auth/restart/password")) {
                 filterChain.doFilter(request, response);
             } else {
                 String token = jwtUtils.getTokenFromHeader(request);

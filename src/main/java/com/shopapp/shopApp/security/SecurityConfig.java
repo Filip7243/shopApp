@@ -65,6 +65,8 @@ public class SecurityConfig {
         http.authorizeRequests().antMatchers("/api/auth/signIn").permitAll();
         http.authorizeRequests().antMatchers("/api/auth/signUp").permitAll();
         http.authorizeRequests().antMatchers("/api/auth/confirm").permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/password/forget").permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/restart/password").permitAll();
         // requests from /api/categories
         http.authorizeRequests().antMatchers("/api/categories/all").hasAnyAuthority(SUPER_ADMIN, ADMIN, MANAGER);
         http.authorizeRequests().antMatchers("/api/categories/add").hasAnyAuthority(SUPER_ADMIN, ADMIN);

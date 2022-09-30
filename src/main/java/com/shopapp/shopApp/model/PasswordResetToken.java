@@ -4,32 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.AUTO;
 import static javax.persistence.GenerationType.IDENTITY;
-import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfirmationToken {
+public class PasswordResetToken {
 
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String token;
-    private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
-    private Boolean isConfirmed;
-    @ManyToOne
-    @OnDelete(action = CASCADE)
+    private Boolean isPasswordReset; // if true delete from db
+    @OneToOne
     private AppUser user;
 }

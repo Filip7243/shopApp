@@ -4,10 +4,13 @@ import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
 import com.shopapp.shopApp.exception.user.UserExistsException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.mapper.AppUserMapper;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
+import com.shopapp.shopApp.model.PasswordResetToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
+import com.shopapp.shopApp.repository.PasswordResetTokenRepository;
 import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_ALREADY_EXISTS;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -40,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     private final EmailSenderImpl emailSender;
     private final ConfirmationTokenServiceImpl confirmationTokenService;
     private final CustomPasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public JwtResponse signInUser(LoginRequest loginRequest) {
@@ -66,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AppUser signUpUser(AppUserSaveUpdateDto registerRequest) {
+    public void signUpUser(AppUserSaveUpdateDto registerRequest) {
 
         String email = registerRequest.getEmail();
 
@@ -89,12 +94,32 @@ public class AuthServiceImpl implements AuthService {
 
         String fullName = newUser.getName() + " " + newUser.getLastName();
         String link = "http://localhost:8080/api/auth/confirm?token=" + confirmationToken.getToken();
-        emailSender.sendEmail(email, buildEmail(fullName, link));
+        emailSender.sendEmail(email, buildEmail(fullName, link), "Confirm your email address");
 
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
-        return newUser;
     }
+
+    @Override
+    public void forgetPassword(String email) {
+        // user gives email, on email he receives link he clicks on link and restart pw
+        AppUser user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, email)));
+
+        PasswordResetToken token = new PasswordResetToken(
+                null,
+                UUID.randomUUID().toString(),
+                LocalDateTime.now().plusDays(1),
+                false,
+                user
+        );
+
+        passwordResetTokenRepository.save(token);
+
+        String link = "http://localhost:8080/api/auth/restart/password?token=" + token.getToken(); //todo ; request body z password
+        emailSender.sendEmail(email, link, "Restart password");
+    }
+
 
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +

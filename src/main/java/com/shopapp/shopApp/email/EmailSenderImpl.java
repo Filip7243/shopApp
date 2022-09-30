@@ -19,7 +19,7 @@ public class EmailSenderImpl implements EmailSender {
 
     @Async
     @Override
-    public void sendEmail(String receiver, String emailBody) {
+    public void sendEmail(String receiver, String emailBody, String subject) {
 
         try {
             MimeMessage msg = javaMailSender.createMimeMessage();
@@ -27,7 +27,7 @@ public class EmailSenderImpl implements EmailSender {
 
             msgHelper.setText(emailBody, true);
             msgHelper.setTo(receiver);
-            msgHelper.setSubject("Confirm your email address");
+            msgHelper.setSubject(subject);
             msgHelper.setFrom("filip7243@gmail.com");
 
             javaMailSender.send(msg);
