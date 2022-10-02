@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.shopapp.shopApp.constants.TimeConstants.*;
+
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -25,10 +27,7 @@ public class Scheduler {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final OrderRepository orderRepository;
-    private static final long YEAR_IN_MS = (long) 1000 * 60 * 60 * 24 * 365;
-    private static final long MONTH_IN_MS = (long) 1000 * 60 * 60 * 24 * 31;
-    private static final long DAY_IN_MS = (long) 1000 * 60 * 60 * 24;
-    private static final long MINUTE_IN_MS = 60000;
+
 
     @Scheduled(fixedRate = YEAR_IN_MS * 6)
     public void checkIfUserExpired() {
