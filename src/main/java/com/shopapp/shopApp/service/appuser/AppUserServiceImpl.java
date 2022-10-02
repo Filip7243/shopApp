@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +103,11 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
                 .orElseThrow(() -> new UserCodeNotFoundException(String.format(USER_CODE_NOT_FOUND, userCode)));
     }
 
+    public void activateUser(AppUser user) {
+        user.setExpiredAt(LocalDateTime.now().plusYears(6));
+        user.setIsLocked(false);
+        userRepository.save(user);
+    }
     private AppUserRole getAppUserRole(String roleName) {
         return roleRepository.findAppUserRoleByName(roleName)
                 .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));

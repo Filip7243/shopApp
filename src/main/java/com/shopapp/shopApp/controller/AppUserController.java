@@ -12,6 +12,7 @@ import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,6 +79,14 @@ public class AppUserController {
             return ResponseEntity.ok(jwtUtils.refreshAccessToken(refreshToken, user));
         }
         return ResponseEntity.badRequest().body(String.format(ACCESS_TOKEN_NOT_REFRESHED));
+    }
+
+    @GetMapping("/account/enable")
+    public ResponseEntity<?> enableAccount(@RequestParam String userCode) throws UserCodeNotFoundException{
+        AppUser user = userService.getUserWithUserCode(userCode);
+        userService.activateUser(user);
+
+        return ResponseEntity.ok().body("User activated");
     }
 
 }

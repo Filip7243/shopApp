@@ -37,11 +37,10 @@ public class AppUser implements UserDetails, Serializable {
     private String phoneNumber;
     private String address;
     @JsonIgnore
-    @ManyToMany(fetch = LAZY)
+    @ManyToMany(fetch = EAGER)
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
-    private Boolean isExpired;
     private Boolean isLocked;
     private Boolean isCredentialsExpired;
     private Boolean isEnabled;
@@ -63,12 +62,12 @@ public class AppUser implements UserDetails, Serializable {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !isExpired;
+        return !(LocalDateTime.now().isBefore(this.getExpiredAt()));
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !isLocked;
+        return !isLocked || !this.isAccountNonExpired();
     }
 
     @Override
@@ -76,7 +75,7 @@ public class AppUser implements UserDetails, Serializable {
         return !isCredentialsExpired;
     }
 
-    @Override
+    @Override // user is enabled when his email is confirmed
     public boolean isEnabled() {
         return isEnabled;
     }

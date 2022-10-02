@@ -24,7 +24,6 @@ public class AppUserMapper {
                 .roles(new HashSet<>())
                 .createdAt(LocalDateTime.now())
                 .expiredAt(LocalDateTime.now().plusYears(6))
-                .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)
                 .isEnabled(false)

@@ -32,7 +32,6 @@ public class AuthController {
 
     private final AuthServiceImpl authService;
     private final ConfirmationTokenServiceImpl confirmationTokenService;
-    private final PasswordResetTokenServiceImpl passwordResetTokenService;
 
     @PostMapping("/signIn")
     public ResponseEntity<JwtResponse> signIn(@RequestBody @Valid LoginRequest loginRequest) {
