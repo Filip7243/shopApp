@@ -17,4 +17,7 @@ public interface OrderRepository extends JpaRepository<UserOrder, Long> {
     @Override
     @Query("SELECT DISTINCT o FROM UserOrder o")
     List<UserOrder> findAll();
+
+    @Query("SELECT o FROM UserOrder o WHERE o.isDelivered = TRUE")
+    List<UserOrder> getDeliveredOrders();
 }

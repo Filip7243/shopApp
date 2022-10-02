@@ -23,7 +23,7 @@ public class AppUserMapper {
                 .address(user.getAddress())
                 .roles(new HashSet<>())
                 .createdAt(LocalDateTime.now())
-                .expiredAt(LocalDateTime.now().plusYears(1))
+                .expiredAt(LocalDateTime.now().plusYears(6))
                 .isExpired(false)
                 .isLocked(false)
                 .isCredentialsExpired(false)

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,4 +23,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @Override
     @Query("SELECT DISTINCT u FROM AppUser u JOIN FETCH u.roles")
     List<AppUser> findAll();
+
+    @Query("SELECT u FROM AppUser u WHERE u.expiredAt < :now")
+    List<AppUser> getExpiredAccounts(LocalDateTime now);
 }
