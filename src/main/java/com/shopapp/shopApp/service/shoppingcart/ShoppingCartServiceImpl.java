@@ -103,5 +103,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(() -> new ShoppingCartNotFoundException(SHOPPING_CART_NOT_FOUND));
     }
 
-    //todo; test all endpoints and create password forget
+    //todo; test all endpoints
 }

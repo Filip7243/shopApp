@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
 
         passwordResetTokenRepository.save(token);
 
-        String link = "http://localhost:8080/api/auth/reset/password?token=" + token.getToken(); //todo ; request body z password
+        String link = "http://localhost:8080/api/auth/reset/password?token=" + token.getToken();
         emailSender.sendEmail(email, link, "Restart password");
     }
 
