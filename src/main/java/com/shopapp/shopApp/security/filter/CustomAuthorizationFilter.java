@@ -31,7 +31,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 || request.getServletPath().equals("/api/auth/confirm")
                 || request.getServletPath().equals("/api/users/accessToken/refresh")
                 || request.getServletPath().equals("/api/auth/password/forget")
-                || request.getServletPath().equals("/api/auth/restart/password")) {
+                || request.getServletPath().equals("/api/auth/reset/password")) {
                 filterChain.doFilter(request, response);
             } else {
                 String token = jwtUtils.getTokenFromHeader(request);

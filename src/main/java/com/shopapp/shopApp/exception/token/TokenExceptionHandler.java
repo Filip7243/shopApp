@@ -29,4 +29,10 @@ public class TokenExceptionHandler {
         return new ResponseEntity<>(details, details.status());
     }
 
+    @ExceptionHandler(PasswordResetTokenException.class)
+    public ResponseEntity<Object> handlePasswordResetTokenException(PasswordResetTokenException e) {
+        ExceptionDetails details = createDetails(e.getMessage(), BAD_REQUEST);
+        return new ResponseEntity<>(details, details.status());
+    }
+
 }

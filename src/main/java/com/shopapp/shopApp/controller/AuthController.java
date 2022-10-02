@@ -60,9 +60,9 @@ public class AuthController {
         authService.forgetPassword(email.getEmail());
         return ResponseEntity.ok("Check your email: " + email.getEmail());
     }
-    @GetMapping("/reset/password")
+    @PostMapping("/reset/password")
     public ResponseEntity<?> restartPassword(@RequestParam("token") String token) {
-        System.out.println("ESSA");
+        authService.resetPassword(token);
         return null;
     }
 

@@ -3,6 +3,8 @@ package com.shopapp.shopApp.service.auth;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
+import com.shopapp.shopApp.exception.token.PasswordResetTokenException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.mapper.AppUserMapper;
@@ -29,8 +31,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_ALREADY_EXISTS;
-import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_NOT_FOUND;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 
 @Slf4j
 @Service
@@ -102,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void forgetPassword(String email) {
-        // user gives email, on email he receives link he clicks on link and restart pw
+        // user gives email, on email he receives link that redirects him to reset pw site
         AppUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, email)));
 
@@ -116,8 +117,28 @@ public class AuthServiceImpl implements AuthService {
 
         passwordResetTokenRepository.save(token);
 
-        String link = "http://localhost:8080/api/auth/restart/password?token=" + token.getToken(); //todo ; request body z password
+        String link = "http://localhost:8080/api/auth/reset/password?token=" + token.getToken(); //todo ; request body z password
         emailSender.sendEmail(email, link, "Restart password");
+    }
+
+    public void resetPassword(String token) {
+        // checks if token exists
+        PasswordResetToken foundToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ConfirmationTokenNotFoundException(TOKEN_NOT_FOUND));
+        // checks if token used
+        if(foundToken.getIsPasswordReset()) {
+            throw new PasswordResetTokenException("Token already used");
+        }
+        // checks if token expired
+        if(foundToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new PasswordResetTokenException("Token already expired!");
+        }
+        // setting new password from user input
+        AppUser user = foundToken.getUser();
+        user.setPassword(passwordEncoder.passwordEncoder().encode("password-from-input"));
+        foundToken.setIsPasswordReset(true);
+        passwordResetTokenRepository.save(foundToken);
+        userRepository.save(user);
     }
 
 
