@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<UserOrder, Long> {
+    @Query("SELECT o FROM UserOrder o JOIN FETCH o.cart WHERE o.orderCode = :#{#orderCode}")
     Optional<UserOrder> findByOrderCode(String orderCode);
 
     Optional<UserOrder> deleteByOrderCode(String orderCode);

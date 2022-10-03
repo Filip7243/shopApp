@@ -7,6 +7,7 @@ import com.shopapp.shopApp.exception.product.ShoppingCartNotFoundException;
 import com.shopapp.shopApp.mapper.CartItemMapper;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ShoppingCart;
+import com.shopapp.shopApp.model.UserOrder;
 import com.shopapp.shopApp.service.order.OrderServiceImpl;
 import com.shopapp.shopApp.service.shoppingcart.ShoppingCartServiceImpl;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,24 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
     private final ShoppingCartServiceImpl shoppingCartService;
+
+    @GetMapping("/show")
+    public ResponseEntity<OrderResponse> showOrder(@RequestParam String orderCode) {
+        UserOrder order = orderService.getOrder(orderCode);
+        ShoppingCart cart = order.getCart();
+        AppUser user = cart.getUser();
+        return ResponseEntity.ok(
+                new OrderResponse(
+                        user.getName(),
+                        user.getLastName(),
+                        user.getPhoneNumber(),
+                        user.getAddress(),
+                        user.getEmail(),
+                        mapToDtoList(cart.getItems()),
+                        order.getTotalPrice()
+                )
+        );
+    }
 
     @PostMapping("/create")
     public ResponseEntity<OrderResponse> createOrder(@RequestParam String shoppingCartCode) throws ShoppingCartNotFoundException {

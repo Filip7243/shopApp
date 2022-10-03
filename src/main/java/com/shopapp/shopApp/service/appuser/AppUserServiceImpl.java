@@ -54,7 +54,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
                 .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, "ROLE_USER")));
         newUser.getRoles().add(roleUser);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
-//        userRepository.save(newUser);
+//        userRepository.save(newUser); //todo; maybe delete cause auth controller has similar method
         return newUser;
     }
 
@@ -69,7 +69,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser foundUser = getUserWithUserCode(userCode);
         foundUser.setName(user.getName());
         foundUser.setLastName(user.getLastName());
-        foundUser.setEmail(user.getEmail());
+        foundUser.setEmail(user.getEmail()); //todo; cant update email or email update only when doesnt exists in db
         foundUser.setPassword(passwordEncoder.passwordEncoder().encode(user.getPassword()));
         foundUser.setPhoneNumber(user.getPhoneNumber());
         foundUser.setAddress(user.getAddress());

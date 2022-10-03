@@ -73,9 +73,10 @@ public class SecurityConfig {
         http.authorizeRequests().antMatchers("/api/categories/update/{id}").hasAuthority(SUPER_ADMIN);
         http.authorizeRequests().antMatchers("/api/categories/delete/{id}").hasAuthority(SUPER_ADMIN);
         // requests from /api/orders
-        http.authorizeRequests().antMatchers("/api/orders/create").hasAnyAuthority(SUPER_ADMIN, USER);
         http.authorizeRequests().antMatchers("/api/orders/update").hasAuthority(SUPER_ADMIN);
+        http.authorizeRequests().antMatchers("/api/orders/show").hasAuthority(SUPER_ADMIN);
         http.authorizeRequests().antMatchers("/api/orders/delete").hasAuthority(SUPER_ADMIN);
+        http.authorizeRequests().antMatchers("/api/orders/create").hasAnyAuthority(SUPER_ADMIN, USER);
         // requests from /api/products
         http.authorizeRequests().antMatchers("/api/products/all").hasAnyAuthority(SUPER_ADMIN, ADMIN, MANAGER, USER, GUEST);
         http.authorizeRequests().antMatchers("/api/products/add").hasAnyAuthority(SUPER_ADMIN, ADMIN);

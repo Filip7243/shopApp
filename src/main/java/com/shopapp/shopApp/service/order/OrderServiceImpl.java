@@ -47,9 +47,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public UserOrder getOrder(String shoppingCartCode) {
-        return orderRepository.findByOrderCode(shoppingCartCode)
-                .orElseThrow(() -> new OrderNotFoundException(String.format(ORDER_NOT_FOUND, shoppingCartCode)));
+    public UserOrder getOrder(String orderCode) {
+        return orderRepository.findByOrderCode(orderCode)
+                .orElseThrow(() -> new OrderNotFoundException(String.format(ORDER_NOT_FOUND, orderCode)));
     }
 
     @Override
