@@ -12,10 +12,12 @@ import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.model.PasswordResetToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
+import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import com.shopapp.shopApp.repository.PasswordResetTokenRepository;
 import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
+import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import com.shopapp.shopApp.service.confirmationtoken.ConfirmationTokenServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,8 @@ public class AuthServiceImpl implements AuthService {
     private final ConfirmationTokenServiceImpl confirmationTokenService;
     private final CustomPasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final AppUserRoleRepository roleRepository;
+    private final AppUserServiceImpl userService;
 
     @Override
     public JwtResponse signInUser(LoginRequest loginRequest) {
@@ -53,6 +57,8 @@ public class AuthServiceImpl implements AuthService {
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        System.out.println("ESSA");
 
         String accessToken = jwtUtils.generateJwtAccessToken(authentication);
         String refreshToken = jwtUtils.generateJwtRefreshToken(authentication);
@@ -80,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UserExistsException(String.format(USER_ALREADY_EXISTS, email));
         }
 
-        AppUser newUser = AppUserMapper.mapToAppUser(null, registerRequest);
+        AppUser newUser = userService.createUser(registerRequest);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 null,
@@ -95,9 +101,10 @@ public class AuthServiceImpl implements AuthService {
 
         String fullName = newUser.getName() + " " + newUser.getLastName();
         String link = "http://localhost:8080/api/auth/confirm?token=" + confirmationToken.getToken();
-        emailSender.sendEmail(email, buildEmail(fullName, link), "Confirm your email address");
+//        emailSender.sendEmail(email, buildEmail(fullName, link), "Confirm your email address");todo;
 
-        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
+//        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
+//        roleRepository.findAppUserRoleByName("ROLE_NAME");
         userRepository.save(newUser);
     }
 

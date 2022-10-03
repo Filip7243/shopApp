@@ -44,14 +44,17 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
     }
 
     @Override
-    public AppUser saveUser(AppUserSaveUpdateDto user) {
+    public AppUser createUser(AppUserSaveUpdateDto user) {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new UserExistsException(String.format(USER_ALREADY_EXISTS, email));
         }
         AppUser newUser = mapToAppUser(null, user);
+        AppUserRole roleUser = roleRepository.findAppUserRoleByName("ROLE_USER")
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, "ROLE_USER")));
+        newUser.getRoles().add(roleUser);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
-        userRepository.save(newUser);
+//        userRepository.save(newUser);
         return newUser;
     }
 

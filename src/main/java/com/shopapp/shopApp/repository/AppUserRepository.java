@@ -3,6 +3,7 @@ package com.shopapp.shopApp.repository;
 import com.shopapp.shopApp.model.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,10 @@ import java.util.Optional;
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     // I don't need to use DISTINCT because I store roles in Set
-//    @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.email = :email")
-    Optional<AppUser> findByEmail(String email); // todo; check if n+1 problem exists w get all users
-
-    Optional<AppUser> findByUserCode(String userCode);
+    @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.email = :#{#email}")
+    Optional<AppUser> findByEmail( String email); // todo; check if n+1 problem exists w get all users
+    @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.userCode = :#{#userCode}")
+    Optional<AppUser> findByUserCode(@Param(value = "userCode") String userCode);
 
     Boolean existsByEmail(String email);
 

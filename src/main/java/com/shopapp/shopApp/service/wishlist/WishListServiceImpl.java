@@ -62,7 +62,8 @@ public class WishListServiceImpl implements WishListService {
         if (!wishListRepository.existsByWishListCode(wishListCode)) {
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
-            user = userRepository.findByEmail(username).orElseThrow();
+            user = userRepository.findByEmail(username)
+                    .orElseThrow();
             wishListCode = createWishList(user.getUserCode());
         }
 

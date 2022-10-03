@@ -36,14 +36,14 @@ public class AppUserController {
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/save")
+    @PostMapping("/create")
     public ResponseEntity<?> saveUser(@RequestBody @Valid AppUserSaveUpdateDto user) throws UserExistsException {
-        userService.saveUser(user);
+        userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(String.format(USER_CREATED, user.getEmail()));
     }
 
-    @DeleteMapping("/delete/{userCode}")
-    public ResponseEntity<?> deleteUserWithUserCode(@PathVariable String userCode) throws UserCodeNotFoundException {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUserWithUserCode(@RequestParam String userCode) throws UserCodeNotFoundException {
         userService.deleteUserWithUserCode(userCode);
         return ResponseEntity.status(HttpStatus.OK).body(String.format(USER_DELETED, userCode));
     }

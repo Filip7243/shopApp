@@ -5,7 +5,7 @@ import com.shopapp.shopApp.model.AppUser;
 
 public interface AppUserService {
 
-    AppUser saveUser(AppUserSaveUpdateDto user);
+    AppUser createUser(AppUserSaveUpdateDto user);
 
     void deleteUserWithUserCode(String userCode);
 

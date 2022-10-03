@@ -52,7 +52,6 @@ public class AuthController {
         confirmationTokenService.confirmEmail(foundToken);
         return ResponseEntity.ok(EMAIL_CONFIRMED);
     }
-//todo; automatically delete expired things
 
     @GetMapping("/password/forget")
     public ResponseEntity<?> forgetPassword(@RequestBody EmailRequest email) {

@@ -52,7 +52,7 @@ public class SecurityConfig {
         // requests from /api/users
         http.authorizeRequests().antMatchers("/api/users/accessToken/refresh").permitAll();
         http.authorizeRequests().antMatchers("/api/users/all").hasAnyAuthority(SUPER_ADMIN, ADMIN, MANAGER);
-        http.authorizeRequests().antMatchers("/api/users/save").hasAnyAuthority(SUPER_ADMIN, ADMIN);
+        http.authorizeRequests().antMatchers("/api/users/create").hasAnyAuthority(SUPER_ADMIN, ADMIN);
         http.authorizeRequests().antMatchers("/api/users/delete/{userCode}").hasAuthority(SUPER_ADMIN);
         http.authorizeRequests().antMatchers("/api/users/update/{userCode}").hasAuthority(SUPER_ADMIN);
         http.authorizeRequests().antMatchers("/api/users/roles/add").hasAnyAuthority(SUPER_ADMIN, ADMIN);

@@ -31,6 +31,7 @@ public class WishListController {
     private final WishListServiceImpl wishListService;
     private final JwtUtils jwtUtils;
     private final AppUserRepository userRepository;
+
     @GetMapping("/show")
     public ResponseEntity<Set<ProductDisplayDto>> showWishListProducts(@RequestParam String wishListCode) throws WishListNotFoundException {
         return ResponseEntity.ok(getSetOfProductsDto(wishListService.getProducts(wishListCode)));
@@ -40,7 +41,8 @@ public class WishListController {
     public ResponseEntity<?> createWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
-        AppUser user = userRepository.findByEmail(username).orElseThrow();
+        AppUser user = userRepository.findByEmail(username)
+                .orElseThrow();
         wishListService.createWishList(user.getUserCode());
         return ResponseEntity.created(URI.create(request.getRequestURI())).body(WISH_LIST_CREATED);
     }
@@ -66,7 +68,8 @@ public class WishListController {
     public ResponseEntity<?> deleteWishList(HttpServletRequest request) throws UserNotFoundException {
         String token = jwtUtils.getTokenFromHeader(request);
         String username = jwtUtils.getUsernameFromJwtToken(token);
-        AppUser user = userRepository.findByEmail(username).orElseThrow();
+        AppUser user = userRepository.findByEmail(username)
+                .orElseThrow();
         wishListService.deleteWishList(user);
         return ResponseEntity.ok(WISH_LIST_DELETED);
     }
