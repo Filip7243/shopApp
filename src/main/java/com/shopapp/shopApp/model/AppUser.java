@@ -2,6 +2,7 @@ package com.shopapp.shopApp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,7 @@ public class AppUser implements UserDetails, Serializable {
     private String address;
     @JsonIgnore
     @ManyToMany(fetch = EAGER)
+    @Nullable
     private Set<AppUserRole> roles;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;

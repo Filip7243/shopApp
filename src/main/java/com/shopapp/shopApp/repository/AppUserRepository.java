@@ -15,7 +15,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     // I don't need to use DISTINCT because I store roles in Set
     @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.email = :#{#email}")
-    Optional<AppUser> findByEmail( String email); // todo; check if n+1 problem exists w get all users
+    Optional<AppUser> findByEmail( String email);
     @Query("SELECT u FROM AppUser u JOIN FETCH u.roles WHERE u.userCode = :#{#userCode}")
     Optional<AppUser> findByUserCode(@Param(value = "userCode") String userCode);
 
