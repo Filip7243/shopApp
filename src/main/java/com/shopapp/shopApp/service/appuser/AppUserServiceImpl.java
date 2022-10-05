@@ -69,7 +69,9 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser foundUser = getUserWithUserCode(userCode);
         foundUser.setName(user.getName());
         foundUser.setLastName(user.getLastName());
-        foundUser.setEmail(user.getEmail()); //todo; cant update email or email update only when doesnt exists in db
+        if(!userRepository.existsByEmail(user.getEmail())) {
+            foundUser.setEmail(user.getEmail()); //todo; cant update email or email update only when doesnt exists in db
+        }
         foundUser.setPassword(passwordEncoder.passwordEncoder().encode(user.getPassword()));
         foundUser.setPhoneNumber(user.getPhoneNumber());
         foundUser.setAddress(user.getAddress());
