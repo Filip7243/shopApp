@@ -1,4 +1,4 @@
-package com.shopapp.shopApp.AppUserTests;
+package AppUserTests;
 
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
