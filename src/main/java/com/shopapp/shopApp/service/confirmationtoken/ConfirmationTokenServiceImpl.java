@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 
@@ -35,9 +36,9 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     }
 
     @Override
-    public ConfirmationToken findByUser(AppUser appUser) {
-        return tokenRepository.findByUser(appUser)
-                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, appUser.getName())));
+    public List<ConfirmationToken> findByUser(AppUser appUser) {
+        return tokenRepository.findByUser(appUser);
+//                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, appUser.getName())));
     }
 
     @Override
