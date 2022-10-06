@@ -1,4 +1,4 @@
-package AppUserTests;
+package com.shopapp.shopApp.AppUserTests;
 
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.PasswordResetToken;

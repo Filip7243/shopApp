@@ -1,4 +1,4 @@
-package AppUserTests;
+package com.shopapp.shopApp.AppUserTests;
 
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRoleRepository;
@@ -16,7 +16,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
-class AppUserRoleRepositoryTest {
+public class AppUserRoleRepositoryTest {
 
     @Autowired
     private AppUserRoleRepository roleRepo;
