@@ -42,8 +42,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteOrder(String shoppingCartCode) {
-        orderRepository.deleteByOrderCode(shoppingCartCode)
-                .orElseThrow(() -> new OrderNotFoundException(String.format(ORDER_NOT_FOUND, shoppingCartCode)));
+        Integer deletedRows = orderRepository.deleteByOrderCode(shoppingCartCode);
+        if(deletedRows == 0) {
+            throw new OrderNotFoundException(String.format(ORDER_NOT_FOUND, shoppingCartCode));
+        }
     }
 
     @Override
