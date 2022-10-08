@@ -28,15 +28,6 @@ public class AppUserRepositoryTest {
     @Autowired
     private AppUserRoleRepository roleRepo;
 
-//    @BeforeEach
-//    void setUp() {
-//
-//    }
-//
-//    @AfterEach
-//    void tearDown() {
-//    }
-
     @Test
     void itShouldFindUserWithEmail() {
         // given

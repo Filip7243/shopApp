@@ -60,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> items = cart.getItems();
         items.forEach(item ->  item.getProduct().setInStock(item.getProduct().getInStock() - item.getQuantity()));
         order.setHasPaid(true);
-        itemRepository.deleteAllByCartId(cart.getId());
+        itemRepository.deleteByCartId(cart.getId());
         items.clear();
         cart.setTotalPrice(0.0);
         orderRepository.save(order);
