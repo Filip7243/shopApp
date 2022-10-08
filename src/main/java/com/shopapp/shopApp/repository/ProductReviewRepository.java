@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
 
-    Optional<ProductReview> findByUser(AppUser user);
+    List<ProductReview> findByUser(AppUser user);
 
     Optional<ProductReview> findByReviewCode(String reviewCode);
 

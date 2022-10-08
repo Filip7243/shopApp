@@ -44,8 +44,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         reviewRepository.delete(productReview);
     }
 
-    public ProductReview findByUser(AppUser user) {
-        return reviewRepository.findByUser(user).orElseThrow();
+    public List<ProductReview> findByUser(AppUser user) {
+        return reviewRepository.findByUser(user);
     }
 
     private ProductReview getReview(String reviewCode) {

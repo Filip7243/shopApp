@@ -45,9 +45,9 @@ public class ProductReviewController {
                                        HttpServletRequest request) throws ProductNotFoundException, UserNotFoundException {
 
         AppUser user = getUser(request);
-        if (reviewService.findByUser(user) != null) {
-            return ResponseEntity.badRequest().body("You already write review");
-        }
+//        if (!reviewService.findByUser(user).isEmpty()) {
+//            return ResponseEntity.badRequest().body("You already write review");
+//        }
         ProductReview productReview = mapToProductReview(reviewDto);
         productReview.setProductId(productService.getProductWithProductCode(productCode).getId());
         productReview.setUser(user);
