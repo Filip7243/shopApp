@@ -22,7 +22,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
-public class PasswordResetTokenRepositoryTests {
+public class PasswordResetTokenRepositoryTest {
 
     @Autowired
     private PasswordResetTokenRepository tokenRepo;

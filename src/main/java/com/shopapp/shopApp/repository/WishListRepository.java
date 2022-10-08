@@ -14,6 +14,7 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
 
     @Query("SELECT w FROM WishList w JOIN FETCH w.wishListItems")
     Optional<WishList> findByWishListCode(String wishListCode);
+
     Boolean existsByWishListCode(String wishListCode);
 
 }
