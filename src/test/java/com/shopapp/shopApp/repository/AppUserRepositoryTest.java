@@ -28,7 +28,6 @@ public class AppUserRepositoryTest {
     @Test
     void itShouldFindUserWithEmail() {
         // given
-
         String email = "fipcio@interia.eu";
         AppUser user = new AppUser(
                 null,

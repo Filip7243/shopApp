@@ -52,6 +52,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser newUser = mapToAppUser(null, user);
         AppUserRole roleUser = roleRepository.findAppUserRoleByName("ROLE_USER")
                 .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, "ROLE_USER")));
+        assert newUser.getRoles() != null;
         newUser.getRoles().add(roleUser);
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
 //        userRepository.save(newUser); //todo; maybe delete cause auth controller has similar method
