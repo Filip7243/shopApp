@@ -1,9 +1,7 @@
-package com.shopapp.shopApp.AppUserTests.ProductTests;
+package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.model.Category;
 import com.shopapp.shopApp.model.Product;
-import com.shopapp.shopApp.repository.CategoryRepository;
-import com.shopapp.shopApp.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

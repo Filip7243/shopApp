@@ -1,7 +1,6 @@
-package com.shopapp.shopApp.AppUserTests;
+package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.model.AppUserRole;
-import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

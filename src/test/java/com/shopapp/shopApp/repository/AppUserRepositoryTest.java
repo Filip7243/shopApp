@@ -1,10 +1,7 @@
-package com.shopapp.shopApp.AppUserTests;
+package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
-import com.shopapp.shopApp.repository.AppUserRepository;
-import com.shopapp.shopApp.repository.AppUserRoleRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
