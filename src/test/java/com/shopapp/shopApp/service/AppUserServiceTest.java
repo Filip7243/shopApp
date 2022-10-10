@@ -1,7 +1,9 @@
 package com.shopapp.shopApp.service;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
+import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
@@ -13,20 +15,19 @@ import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,13 +57,15 @@ public class AppUserServiceTest {
     @Test
     void canLoadUserWithUsername() {
         AppUser user = new AppUser();
-        user.setEmail("filip@mail.com");
+        String email = "filip@mail.com";
+        user.setEmail(email);
         when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        UserDetails userDetails = userService.loadUserByUsername("filip@mail.com");
+        UserDetails userDetails = userService.loadUserByUsername(email);
 
         assertNotNull(userDetails);
         assertEquals(user.getEmail(), userDetails.getUsername());
+        verify(userRepo).findByEmail(email);
     }
 
     @Test
@@ -110,9 +113,211 @@ public class AppUserServiceTest {
         // given
         AppUserSaveUpdateDto user = new AppUserSaveUpdateDto();
         // when
-        RoleNotFoundException exception = assertThrows(RoleNotFoundException.class, () -> userService.createUser(user));
+        RoleNotFoundException exception =
+                assertThrows(RoleNotFoundException.class, () -> userService.createUser(user));
         // then
         assertEquals("Role ROLE_USER not found!", exception.getMessage());
+    }
+
+    @Test
+    void canGetUserWithUserCode() {
+        AppUser user = new AppUser();
+        String uuid = anyString();
+        user.setUserCode(uuid);
+        when(userRepo.findByUserCode(user.getUserCode())).thenReturn(Optional.of(user));
+
+        AppUser foundUser = userService.getUserWithUserCode(user.getUserCode());
+
+        assertNotNull(foundUser);
+        assertEquals(foundUser.getUserCode(), user.getUserCode());
+    }
+
+    @Test
+    void throwsUserCodeNotFoundExceptionWhenGetUserWithUserCode() {
+        String uuid = anyString();
+        when(userRepo.findByUserCode(uuid)).thenReturn(Optional.empty());
+
+        UserCodeNotFoundException exception =
+                assertThrows(UserCodeNotFoundException.class, () -> userService.getUserWithUserCode(uuid));
+
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, uuid));
+    }
+
+    @Test
+    void canDeleteUserWithUserCode() {
+        AppUser user = new AppUser();
+        String uuid = anyString();
+        user.setUserCode(uuid);
+
+        when(userRepo.findByUserCode(uuid)).thenReturn(Optional.of(user));
+        userService.deleteUserWithUserCode(uuid);
+
+        verify(userRepo).delete(user);
+    }
+
+    @Test
+    void throwsUserCodeNotFoundExceptionWhenDeleteUserWithUserCode() {
+        String uuid = anyString();
+        when(userRepo.findByUserCode(uuid)).thenReturn(Optional.empty());
+
+        UserCodeNotFoundException exception =
+                assertThrows(UserCodeNotFoundException.class, () -> userService.getUserWithUserCode(uuid));
+
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, uuid));
+    }
+
+    @Test
+    void canUpdateUser() {
+        AppUser user = new AppUser();
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(userRepo.existsByEmail(anyString)).thenReturn(true);
+
+        userService.updateUser(anyString,
+                new AppUserSaveUpdateDto(anyString, anyString, anyString, anyString, anyString, anyString));
+
+        verify(userRepo).save(user);
+    }
+
+    @Test
+    void throwsUserCodeNotFoundExceptionWhenUpdateUser() {
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.empty());
+        UserCodeNotFoundException exception = assertThrows(UserCodeNotFoundException.class,
+                () -> userService.updateUser(anyString, ArgumentMatchers.any(AppUserSaveUpdateDto.class)));
+
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, anyString));
+    }
+
+    @Test
+    void canAddRoleToUser() {
+        AppUser user = new AppUser();
+        AppUserRole role = new AppUserRole();
+        String anyString = anyString();
+        user.setUserCode(anyString);
+        user.setRoles(new HashSet<>());
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.of(role));
+
+        userService.addRoleToUser(anyString, anyString);
+
+        verify(userRepo).save(user);
+    }
+
+    @Test
+    void throwsRoleExistsExceptionWhenAddRoleToUser() {
+        AppUser user = new AppUser();
+        AppUserRole role = new AppUserRole();
+        String anyString = anyString();
+        role.setName(anyString);
+        user.setUserCode(anyString);
+        user.setRoles(new HashSet<>());
+        assert user.getRoles() != null;
+        user.getRoles().add(role);
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.of(role));
+
+        RoleExistsException exception =
+                assertThrows(RoleExistsException.class, () -> userService.addRoleToUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), String.format(ROLE_ALREADY_EXISTS, anyString));
+    }
+
+    @Test
+    void throwsUserCodeNotFoundExceptionWhenAddRoleToUser() {
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.empty());
+
+        UserCodeNotFoundException exception =
+                assertThrows(UserCodeNotFoundException.class, () -> userService.addRoleToUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, anyString));
+    }
+
+    @Test
+    void throwsRoleNotFoundExceptionWhenAddRoleToUser() {
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(new AppUser()));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.empty());
+
+        RoleNotFoundException exception =
+                assertThrows(RoleNotFoundException.class, () -> userService.addRoleToUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), String.format(ROLE_NOT_FOUND, anyString));
+    }
+
+    @Test
+    void canDeleteRoleFromUser() {
+        AppUser user = new AppUser();
+        AppUserRole role = new AppUserRole();
+        String anyString = anyString();
+        role.setName(anyString);
+        user.setUserCode(anyString);
+        user.setRoles(new HashSet<>());
+        assert user.getRoles() != null;
+        user.getRoles().add(role);
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.of(role));
+
+        userService.deleteRoleFromUser(anyString, anyString);
+    }
+
+    @Test
+    void throwsRoleNotFoundWhenDeleteRoleFromUser() {
+        AppUser user = new AppUser();
+        AppUserRole role = new AppUserRole();
+        String anyString = anyString();
+        role.setName(anyString);
+        user.setUserCode(anyString);
+        user.setRoles(new HashSet<>());
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.of(role));
+
+        RoleNotFoundException exception =
+                assertThrows(RoleNotFoundException.class, () -> userService.deleteRoleFromUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), "User doesn't have: " + anyString);
+    }
+
+    @Test
+    void throwsRoleNotFoundExceptionWhenDeleteRoleFromUser() {
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(new AppUser()));
+        when(roleRepo.findAppUserRoleByName(anyString)).thenReturn(Optional.empty());
+
+        RoleNotFoundException exception =
+                assertThrows(RoleNotFoundException.class, () -> userService.deleteRoleFromUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), String.format(ROLE_NOT_FOUND, anyString));
+    }
+
+    @Test
+    void throwsUserCodeNotFoundExceptionWhenDeleteRoleFromUser() {
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.empty());
+
+        UserCodeNotFoundException exception =
+                assertThrows(UserCodeNotFoundException.class, () -> userService.deleteRoleFromUser(anyString, anyString));
+
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, anyString));
+    }
+
+    @Test
+    void canActivateUser() {
+        AppUser user = new AppUser();
+        userService.activateUser(user);
+
+        verify(userRepo).save(user);
     }
 
 

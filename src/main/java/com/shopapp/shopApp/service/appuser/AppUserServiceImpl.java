@@ -1,6 +1,7 @@
 package com.shopapp.shopApp.service.appuser;
 
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
@@ -85,21 +86,23 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
         AppUser appUser = getUserWithUserCode(userCode);
         AppUserRole role = getAppUserRole(roleName);
         Set<AppUserRole> roles = appUser.getRoles();
+        assert roles != null;
         if(!roles.contains(role)) {
             roles.add(role);
             userRepository.save(appUser);
         } else {
-            throw new IllegalStateException(String.format(ROLE_ALREADY_EXISTS, role.getName()));
+            throw new RoleExistsException(String.format(ROLE_ALREADY_EXISTS, role.getName()));
         }
     }
 
     @Override
     public void deleteRoleFromUser(String userCode, String roleName) {
-        AppUserRole role = getAppUserRole(roleName);
         AppUser user = getUserWithUserCode(userCode);
+        AppUserRole role = getAppUserRole(roleName);
         Set<AppUserRole> roles = user.getRoles();
+        assert roles != null;
         if(!roles.contains(role)) {
-            throw new RoleNotFoundException("User don't have: " + roleName);
+            throw new RoleNotFoundException("User doesn't have: " + roleName);
         }
         roles.remove(role);
     }
