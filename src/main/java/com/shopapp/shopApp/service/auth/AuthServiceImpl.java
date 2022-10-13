@@ -7,12 +7,10 @@ import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
 import com.shopapp.shopApp.exception.token.PasswordResetTokenException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
-import com.shopapp.shopApp.mapper.AppUserMapper;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.model.PasswordResetToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
-import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import com.shopapp.shopApp.repository.PasswordResetTokenRepository;
 import com.shopapp.shopApp.security.CustomPasswordEncoder;
 import com.shopapp.shopApp.security.jwt.JwtResponse;
@@ -20,6 +18,7 @@ import com.shopapp.shopApp.security.jwt.JwtUtils;
 import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
 import com.shopapp.shopApp.service.confirmationtoken.ConfirmationTokenServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +47,6 @@ public class AuthServiceImpl implements AuthService {
     private final ConfirmationTokenServiceImpl confirmationTokenService;
     private final CustomPasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-    private final AppUserRoleRepository roleRepository;
     private final AppUserServiceImpl userService;
 
     @Override
