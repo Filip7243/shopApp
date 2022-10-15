@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    void createOrder(ShoppingCart shoppingCart);
+    UserOrder createOrder(ShoppingCart shoppingCart);
     void updateOrder(String orderCode, UserOrderDto orderDto);
     void deleteOrder(String orderCode);
     UserOrder getOrder(String orderCode);

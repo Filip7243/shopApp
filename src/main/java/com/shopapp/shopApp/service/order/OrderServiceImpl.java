@@ -27,8 +27,10 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository itemRepository;
 
     @Override
-    public void createOrder(ShoppingCart shoppingCart) {
-        orderRepository.save(mapToOrder(shoppingCart));
+    public UserOrder createOrder(ShoppingCart shoppingCart) {
+        UserOrder order = mapToOrder(shoppingCart);
+        orderRepository.save(order);
+        return order;
     }
 
     // only for super-admin
