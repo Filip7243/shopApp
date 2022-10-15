@@ -3,7 +3,6 @@ package com.shopapp.shopApp.service.confirmationtoken;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenConfirmedException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenExpiredException;
 import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
-import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.ConfirmationToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -38,7 +37,6 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     @Override
     public List<ConfirmationToken> findByUser(AppUser appUser) {
         return tokenRepository.findByUser(appUser);
-//                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, appUser.getName())));
     }
 
     @Override
@@ -55,7 +53,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
         }
 
         if (confirmationToken.getIsConfirmed()) {
-            throw new ConfirmationTokenConfirmedException(String.format(TOKEN_CONFIRMED, confirmationToken));
+            throw new ConfirmationTokenConfirmedException(String.format(TOKEN_CONFIRMED, confirmationToken.getToken()));
         }
 
         if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {

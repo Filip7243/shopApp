@@ -32,7 +32,6 @@ public class ProductReviewServiceTest {
 
     private ProductReviewServiceImpl productReviewService;
     private AppUser user;
-    private Product product;
     private ProductReview productReview;
 
     @BeforeEach
@@ -54,17 +53,6 @@ public class ProductReviewServiceTest {
                 false,
                 true
         );
-        this.product = Product.builder()
-                .id(1L)
-                .productCode(UUID.randomUUID().toString())
-                .name("p1")
-                .description("p1desc")
-                .price(22.90)
-                .inStock(10)
-                .imageUrl("testImg")
-                .categories(new ArrayList<>())
-                .reviews(new ArrayList<>())
-                .build();
 
         this.productReview = new ProductReview(null, "test", "test", "test", 1, 1L, user);
     }
@@ -102,7 +90,6 @@ public class ProductReviewServiceTest {
     @Test
     void canDeleteReview() {
         when(productReviewRepo.findByReviewCode(productReview.getReviewCode())).thenReturn(Optional.of(productReview));
-        productReviewService.updateReview(productReview.getReviewCode(), new ProductReviewAddUpdateDto("test", "test", 1));
         productReviewService.deleteReview(productReview.getReviewCode());
         verify(productReviewRepo).delete(productReview);
     }

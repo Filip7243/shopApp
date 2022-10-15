@@ -80,6 +80,5 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductWithProductCode(String productCode) {
         return productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
-
     }
 }
