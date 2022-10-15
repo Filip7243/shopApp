@@ -31,9 +31,9 @@ import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository cartRepository;
-    private final CartItemServiceImpl itemService;
-    private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final CartItemRepository cartItemRepository;
+    //    private final CartItemServiceImpl itemService;
 
     @Override
     public ShoppingCart createShoppingCart() {
@@ -43,7 +43,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cart.setItems(new ArrayList<>());
         cart.setCreatedAt(LocalDateTime.now());
         cart.setTotalPrice(0.0);
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
+        return cart;
     }
 
     @Override
@@ -60,7 +61,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
 
-        CartItem item = itemService.createCartItem(product);
+//        CartItem item = itemService.createCartItem(product);
+        CartItem item = new CartItem();
+        item.setQuantity(0);
+        item.setProduct(product);
         item.setCartId(shoppingCart.getId());
 
         if (quantity > item.getProduct().getInStock()) {
@@ -83,7 +87,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         items.add(item);
         shoppingCart.setTotalPrice(shoppingCart.getTotalPrice() + item.getProduct().getPrice());
 
-        itemService.saveCartItem(item);
+        cartItemRepository.save(item);
         cartRepository.save(shoppingCart);
     }
 
@@ -93,7 +97,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         CartItem item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new CartItemNotFoundException(CART_ITEM_NOT_FOUND));
         shoppingCart.getItems().remove(item);
-        itemService.deleteCartItem(itemId);
+        cartItemRepository.delete(item);
         cartRepository.save(shoppingCart);
     }
 
