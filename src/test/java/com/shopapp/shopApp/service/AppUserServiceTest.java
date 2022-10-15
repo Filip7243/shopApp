@@ -181,6 +181,20 @@ public class AppUserServiceTest {
     }
 
     @Test
+    void canUpdateUserButNotEmailBecauseAlreadyExists() {
+        AppUser user = new AppUser();
+        String anyString = anyString();
+
+        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.of(user));
+        when(userRepo.existsByEmail(anyString)).thenReturn(false);
+
+        userService.updateUser(anyString,
+                new AppUserSaveUpdateDto(anyString, anyString, anyString, anyString, anyString, anyString));
+
+        verify(userRepo).save(user);
+    }
+
+    @Test
     void throwsUserCodeNotFoundExceptionWhenUpdateUser() {
         String anyString = anyString();
 
