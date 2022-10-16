@@ -196,13 +196,13 @@ public class AppUserServiceTest {
 
     @Test
     void throwsUserCodeNotFoundExceptionWhenUpdateUser() {
-        String anyString = anyString();
+        String code = anyString();
 
-        when(userRepo.findByUserCode(anyString)).thenReturn(Optional.empty());
+        when(userRepo.findByUserCode(code)).thenReturn(Optional.empty());
         UserCodeNotFoundException exception = assertThrows(UserCodeNotFoundException.class,
-                () -> userService.updateUser(anyString, ArgumentMatchers.any(AppUserSaveUpdateDto.class)));
+                () -> userService.updateUser(code, ArgumentMatchers.any(AppUserSaveUpdateDto.class)));
 
-        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, anyString));
+        assertEquals(exception.getMessage(), String.format(USER_CODE_NOT_FOUND, code));
     }
 
     @Test
