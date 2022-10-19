@@ -15,13 +15,9 @@ import com.shopapp.shopApp.service.wishlist.WishListServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.quality.Strictness;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.core.parameters.P;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -32,8 +28,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @ExtendWith({MockitoExtension.class})
@@ -216,6 +212,85 @@ public class WishListServiceTest {
 
         assertEquals(1, wishListItems.size());
         verify(wishListRepo).save(wishList);
+    }
+
+    @Test
+    void throwsProductNotFoundExceptionWhenAddItemToWishList() {
+        var code = anyString();
+
+        when(productRepo.findByProductCode(code)).thenReturn(Optional.empty());
+        var exception =
+                assertThrows(ProductNotFoundException.class, () -> wishListService.addProductToWishList(code, code, null));
+
+        assertEquals(String.format(PRODUCT_NOT_FOUND, "with code: " + code), exception.getMessage());
+        assertThat(exception).isInstanceOf(ProductNotFoundException.class);
+    }
+
+    @Test
+    void throwsUserNotFoundExceptionIfWishListNotFoundExceptionIsCatchedWhenAddItemToWishList() {
+        var anyString = anyString();
+        var product = new Product();
+        var request = new MockHttpServletRequest();
+        request.addHeader(AUTHORIZATION, anyString);
+
+
+        when(productRepo.findByProductCode(anyString)).thenReturn(Optional.of(product));
+        when(wishListRepo.findByWishListCode(anyString)).thenReturn(Optional.empty());
+        when(userRepo.findByEmail(anyString)).thenReturn(Optional.empty());
+        when(jwtUtils.getTokenFromHeader(request)).thenReturn(anyString);
+        when(jwtUtils.getUsernameFromJwtToken(anyString)).thenReturn(anyString);
+
+        var exception =
+                assertThrows(UserNotFoundException.class, () -> wishListService.addProductToWishList(anyString, anyString, request));
+
+        assertEquals(String.format(USER_NOT_FOUND, anyString), exception.getMessage());
+        assertThat(exception).isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    void canGetProducts() {
+        var code = anyString();
+        var wishList = new WishList();
+        wishList.setWishListItems(new HashSet<>());
+
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.of(wishList));
+        Set<Product> products = wishListService.getProducts(code);
+
+        assertThat(products).isNotNull();
+        assertThat(products).isInstanceOf(Set.class);
+    }
+
+    @Test
+    void throwsWishListNotFoundExceptionWhenGetProducts() {
+        var code = anyString();
+
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.empty());
+        var exception = assertThrows(WishListNotFoundException.class, () -> wishListService.getProducts(code));
+
+        assertEquals(WISH_LIST_NOT_FOUND, exception.getMessage());
+        assertThat(exception).isInstanceOf(WishListNotFoundException.class);
+    }
+
+    @Test
+    void canGetWishList() {
+        var code = anyString();
+
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.of(new WishList()));
+        WishList wishList = wishListService.getWishList(code);
+
+        assertThat(wishList).isNotNull();
+        assertThat(wishList).isInstanceOf(WishList.class);
+    }
+
+    @Test
+    void throwsWishListNotFoundExceptionWhenGetWishList() {
+        var code = anyString();
+
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.empty());
+        var exception = assertThrows(WishListNotFoundException.class, () -> wishListService.getProducts(code));
+
+        assertEquals(WISH_LIST_NOT_FOUND, exception.getMessage());
+        assertThat(exception).isInstanceOf(WishListNotFoundException.class);
     }
 
 

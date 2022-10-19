@@ -1,6 +1,5 @@
 package com.shopapp.shopApp.service.wishlist;
 
-import com.shopapp.shopApp.constants.ExceptionsConstants;
 import com.shopapp.shopApp.exception.product.ProductNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserNotFoundException;
@@ -12,8 +11,6 @@ import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.repository.ProductRepository;
 import com.shopapp.shopApp.repository.WishListRepository;
 import com.shopapp.shopApp.security.jwt.JwtUtils;
-import com.shopapp.shopApp.service.appuser.AppUserServiceImpl;
-import com.shopapp.shopApp.service.product.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -64,27 +61,25 @@ public class WishListServiceImpl implements WishListService {
     public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
         Product product = productRepository.findByProductCode(productCode)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
-        WishList wishList = null;
+        WishList wishList;
 
         try {
             wishList = getWishList(wishListCode);
         } catch (WishListNotFoundException e) {
+            wishList = new WishList();
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
             AppUser user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, username)));
-            wishList = new WishList();
             wishList.setWishListCode(UUID.randomUUID().toString());
             wishList.setUser(user);
             wishList.setWishListItems(new HashSet<>());
-        } finally {
-            assert wishList != null;
-            Set<Product> wishListItems = wishList.getWishListItems();
-            wishListItems.add(product);
-            wishListRepository.save(wishList);
         }
 
-        //todo; improve it
+        assert wishList != null;
+        Set<Product> wishListItems = wishList.getWishListItems();
+        wishListItems.add(product);
+        wishListRepository.save(wishList);
 
 //        if (!wishListRepository.existsByWishListCode(wishListCode)) {
 //            String token = jwtUtils.getTokenFromHeader(request);
