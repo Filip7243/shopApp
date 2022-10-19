@@ -62,24 +62,48 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
+        Product product = productRepository.findByProductCode(productCode)
+                .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
+        WishList wishList = null;
 
-        if (!wishListRepository.existsByWishListCode(wishListCode)) {
+        try {
+            wishList = getWishList(wishListCode);
+        } catch (WishListNotFoundException e) {
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
             AppUser user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, username)));
-            wishListCode = createWishList(user.getUserCode());
+            wishList = new WishList();
+            wishList.setWishListCode(UUID.randomUUID().toString());
+            wishList.setUser(user);
+            wishList.setWishListItems(new HashSet<>());
+        } finally {
+            assert wishList != null;
+            Set<Product> wishListItems = wishList.getWishListItems();
+            wishListItems.add(product);
+            wishListRepository.save(wishList);
         }
 
-        WishList wishList = getWishList(wishListCode);
-        Set<Product> wishListItems = wishList.getWishListItems();
-        Product product = productRepository.findByProductCode(productCode)
-                .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
-        if (wishListItems.contains(product)) {
-            return;
-        }
-        wishListItems.add(product);
-        wishListRepository.save(wishList);
+        //todo; improve it
+
+//        if (!wishListRepository.existsByWishListCode(wishListCode)) {
+//            String token = jwtUtils.getTokenFromHeader(request);
+//            String username = jwtUtils.getUsernameFromJwtToken(token);
+//            AppUser user = userRepository.findByEmail(username)
+//                    .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, username)));
+//            wishList = new WishList();
+//            wishList.setWishListCode(UUID.randomUUID().toString());
+//            wishList.setUser(user);
+//            wishList.setWishListItems(new HashSet<>());
+//            wishListRepository.save(wishList);
+//        }
+
+//        wishList = getWishList(wishListCode);
+//        Set<Product> wishListItems = wishList.getWishListItems();
+//        Product product = productRepository.findByProductCode(productCode)
+//                .orElseThrow(() -> new ProductNotFoundException(String.format(PRODUCT_NOT_FOUND, "with code: " + productCode)));
+//        wishListItems.add(product);
+//        wishListRepository.save(wishList);
     }
 
     @Override

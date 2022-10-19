@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.quality.Strictness;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.core.parameters.P;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -162,9 +163,8 @@ public class WishListServiceTest {
         Set<Product> wishListItems = wishList.getWishListItems();
         assertEquals(0, wishListItems.size());
 
-        when(wishListRepo.existsByWishListCode(code)).thenReturn(true);
-        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.of(wishList));
         when(productRepo.findByProductCode(code)).thenReturn(Optional.of(product));
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.of(wishList));
         wishListService.addProductToWishList(code, code, null);
 
         assertEquals(1, wishListItems.size());
@@ -174,20 +174,49 @@ public class WishListServiceTest {
     @Test
     void canAddProductToWishListWhenWishListDoesNotExist() {
         var anyString = anyString();
+
         var request = new MockHttpServletRequest();
         request.addHeader(AUTHORIZATION, anyString);
+
         var user = new AppUser();
+        var product = new Product();
+
         var wishList = new WishList();
-        //todo; do ogarniecia
-        when(wishListRepo.existsByWishListCode(anyString)).thenReturn(false);
+        wishList.setWishListItems(new HashSet<>());
+        Set<Product> wishListItems = wishList.getWishListItems();
+        assertEquals(0, wishListItems.size());
+
+        when(productRepo.findByProductCode(anyString)).thenReturn(Optional.of(product));
+        when(wishListRepo.findByWishListCode(anyString)).thenReturn(Optional.empty());
+
         when(jwtUtils.getTokenFromHeader(request)).thenReturn(anyString);
         when(jwtUtils.getUsernameFromJwtToken(anyString)).thenReturn(anyString);
+
         when(userRepo.findByEmail(anyString)).thenReturn(Optional.of(user));
-        when(wishListRepo.findByWishListCode(anyString)).thenReturn(Optional.of(wishList));
-        when(productRepo.findByProductCode(anyString)).thenReturn(Optional.of(new Product()));
         wishListService.addProductToWishList(anyString, anyString, request);
 
-//        verify(wishListRepo).save(wishList);
+        wishListItems.add(product);
+        assertEquals(1, wishListItems.size());
     }
+
+    @Test
+    void canNotAddItemToWishListIfAlreadyExists() {
+        var code = anyString();
+
+        var product = new Product();
+        var wishList = new WishList();
+        wishList.setWishListItems(new HashSet<>());
+        Set<Product> wishListItems = wishList.getWishListItems();
+        wishListItems.add(product);
+        assertEquals(1, wishListItems.size());
+
+        when(wishListRepo.findByWishListCode(code)).thenReturn(Optional.of(wishList));
+        when(productRepo.findByProductCode(code)).thenReturn(Optional.of(product));
+        wishListService.addProductToWishList(code, code, null);
+
+        assertEquals(1, wishListItems.size());
+        verify(wishListRepo).save(wishList);
+    }
+
 
 }
