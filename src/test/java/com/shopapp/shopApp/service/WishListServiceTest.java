@@ -15,10 +15,13 @@ import com.shopapp.shopApp.service.wishlist.WishListServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
+import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.net.http.HttpRequest;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -28,10 +31,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class})
 public class WishListServiceTest {
 
     @Mock
@@ -40,13 +44,13 @@ public class WishListServiceTest {
     private AppUserRepository userRepo;
     @Mock
     private ProductRepository productRepo;
-
+    @Mock
     private JwtUtils jwtUtils;
+
     private WishListServiceImpl wishListService;
 
     @BeforeEach
     void setUp() {
-        this.jwtUtils = new JwtUtils();
         this.wishListService = new WishListServiceImpl(wishListRepo, userRepo, productRepo, jwtUtils);
     }
 
@@ -165,6 +169,25 @@ public class WishListServiceTest {
 
         assertEquals(1, wishListItems.size());
         verify(wishListRepo).save(wishList);
+    }
+
+    @Test
+    void canAddProductToWishListWhenWishListDoesNotExist() {
+        var anyString = anyString();
+        var request = new MockHttpServletRequest();
+        request.addHeader(AUTHORIZATION, anyString);
+        var user = new AppUser();
+        var wishList = new WishList();
+        //todo; do ogarniecia
+        when(wishListRepo.existsByWishListCode(anyString)).thenReturn(false);
+        when(jwtUtils.getTokenFromHeader(request)).thenReturn(anyString);
+        when(jwtUtils.getUsernameFromJwtToken(anyString)).thenReturn(anyString);
+        when(userRepo.findByEmail(anyString)).thenReturn(Optional.of(user));
+        when(wishListRepo.findByWishListCode(anyString)).thenReturn(Optional.of(wishList));
+        when(productRepo.findByProductCode(anyString)).thenReturn(Optional.of(new Product()));
+        wishListService.addProductToWishList(anyString, anyString, request);
+
+//        verify(wishListRepo).save(wishList);
     }
 
 }

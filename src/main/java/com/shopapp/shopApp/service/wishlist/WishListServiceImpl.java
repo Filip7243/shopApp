@@ -62,12 +62,12 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void addProductToWishList(String wishListCode, String productCode, HttpServletRequest request) {
+
         if (!wishListRepository.existsByWishListCode(wishListCode)) {
-            AppUser user;
             String token = jwtUtils.getTokenFromHeader(request);
             String username = jwtUtils.getUsernameFromJwtToken(token);
-            user = userRepository.findByEmail(username)
-                    .orElseThrow();
+            AppUser user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND, username)));
             wishListCode = createWishList(user.getUserCode());
         }
 
