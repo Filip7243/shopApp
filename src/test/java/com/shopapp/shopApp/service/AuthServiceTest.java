@@ -1,7 +1,9 @@
 package com.shopapp.shopApp.service;
 
+import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
+import com.shopapp.shopApp.exception.user.UserExistsException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
 import com.shopapp.shopApp.repository.AppUserRepository;
@@ -17,15 +19,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.*;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
 
+import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_ALREADY_EXISTS;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,10 +44,10 @@ public class AuthServiceTest {
     private EmailSenderImpl emailSender;
     private ConfirmationTokenServiceImpl tokenService;
     private CustomPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private PasswordResetTokenRepository passwordTokenRepo;
     private AppUserServiceImpl userService;
     private Authentication authentication;
-    private UsernamePasswordAuthenticationToken token;
     private AuthServiceImpl authService;
 
     @BeforeEach
@@ -54,14 +57,14 @@ public class AuthServiceTest {
         this.emailSender = Mockito.mock(EmailSenderImpl.class);
         this.tokenService = Mockito.mock(ConfirmationTokenServiceImpl.class);
         this.passwordEncoder = Mockito.mock(CustomPasswordEncoder.class);
+        this.bCryptPasswordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
         this.passwordTokenRepo = Mockito.mock(PasswordResetTokenRepository.class);
         this.userService = Mockito.mock(AppUserServiceImpl.class);
         this.authentication = Mockito.mock(Authentication.class);
-        this.token = Mockito.mock(UsernamePasswordAuthenticationToken.class);
         this.authenticationManager = Mockito.mock(AuthenticationManager.class);
 
-
-        this.authService = new AuthServiceImpl(userRepo, authenticationManager, jwtUtils, emailSender, tokenService, passwordEncoder, passwordTokenRepo, userService);
+        this.authService =
+                new AuthServiceImpl(userRepo, authenticationManager, jwtUtils, emailSender, tokenService, passwordEncoder, passwordTokenRepo, userService);
     }
 
     @Test
@@ -110,6 +113,36 @@ public class AuthServiceTest {
         assertThat(ex).isNotNull();
         assertThat(ex).isInstanceOf(InternalAuthenticationServiceException.class);
         assertThat(ex.getMessage()).isEqualTo(msg);
+    }
+
+    @Test
+    void canSignUpUser() {
+        var user = new AppUser();
+        user.setPassword("basdsa");
+        var userDto = new AppUserSaveUpdateDto();
+        userDto.setEmail("test@mail.com");
+
+        when(userRepo.existsByEmail(userDto.getEmail())).thenReturn(false);
+        when(userService.createUser(userDto)).thenReturn(user);
+        when(passwordEncoder.passwordEncoder()).thenReturn(bCryptPasswordEncoder);
+
+        authService.signUpUser(userDto);
+
+        verify(tokenService).saveConfirmationToken(any());
+        verify(emailSender).sendEmail(any(), any(), any());
+        verify(userRepo).save(any());
+    }
+
+    @Test
+    void throwsUserExistsExceptionWhenSignInUser() {
+        var userDto = new AppUserSaveUpdateDto();
+        userDto.setEmail("test@mail.com");
+
+        when(userRepo.existsByEmail(userDto.getEmail())).thenReturn(true);
+
+        var exception =
+                assertThrows(UserExistsException.class, () -> authService.signUpUser(userDto));
+        assertEquals(String.format(USER_ALREADY_EXISTS, userDto.getEmail()), exception.getMessage());
     }
 
 

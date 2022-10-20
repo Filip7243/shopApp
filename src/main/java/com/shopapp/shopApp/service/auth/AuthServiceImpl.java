@@ -75,7 +75,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void signUpUser(AppUserSaveUpdateDto registerRequest) {
-
         String email = registerRequest.getEmail();
 
         if (userRepository.existsByEmail(email)) {
@@ -97,10 +96,9 @@ public class AuthServiceImpl implements AuthService {
 
         String fullName = newUser.getName() + " " + newUser.getLastName();
         String link = "http://localhost:8080/api/auth/confirm?token=" + confirmationToken.getToken();
-//        emailSender.sendEmail(email, buildEmail(fullName, link), "Confirm your email address");todo;
+        emailSender.sendEmail(email, buildEmail(fullName, link), "Confirm your email address");
 
-//        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
-//        roleRepository.findAppUserRoleByName("ROLE_NAME");
+        newUser.setPassword(passwordEncoder.passwordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
     }
 
