@@ -17,10 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,9 +48,8 @@ public class AuthServiceTest {
     private AuthServiceImpl authService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         this.userRepo = Mockito.mock(AppUserRepository.class);
-        this.authenticationManager = Mockito.mock(AuthenticationManager.class);
         this.jwtUtils = Mockito.mock(JwtUtils.class);
         this.emailSender = Mockito.mock(EmailSenderImpl.class);
         this.tokenService = Mockito.mock(ConfirmationTokenServiceImpl.class);
@@ -61,6 +58,8 @@ public class AuthServiceTest {
         this.userService = Mockito.mock(AppUserServiceImpl.class);
         this.authentication = Mockito.mock(Authentication.class);
         this.token = Mockito.mock(UsernamePasswordAuthenticationToken.class);
+        this.authenticationManager = Mockito.mock(AuthenticationManager.class);
+
 
         this.authService = new AuthServiceImpl(userRepo, authenticationManager, jwtUtils, emailSender, tokenService, passwordEncoder, passwordTokenRepo, userService);
     }
@@ -99,15 +98,18 @@ public class AuthServiceTest {
     }
 
     @Test
-    void canNotSignInUserBecauseAuthenticationFailed() {
-        var anyString = anyString();
-        var loginRequest = new LoginRequest("anyString", "anyString");
+    void canNotSignInUserBecauseUserDoesNotExist() {
+        String msg = "Bad credentials";
 
-        when(authenticationManager.authenticate(token)).thenReturn(authentication);
+        when(authenticationManager.authenticate(any())).thenThrow(new InternalAuthenticationServiceException(msg));
 
-        authService.signInUser(loginRequest);
-//        var ex = assertThrows(BadCredentialsException.class, () -> authService.signInUser(loginRequest));
+        var ex =
+                assertThrows(InternalAuthenticationServiceException.class,
+                        () -> authService.signInUser(new LoginRequest("ab", "cd")));
 
+        assertThat(ex).isNotNull();
+        assertThat(ex).isInstanceOf(InternalAuthenticationServiceException.class);
+        assertThat(ex.getMessage()).isEqualTo(msg);
     }
 
 
