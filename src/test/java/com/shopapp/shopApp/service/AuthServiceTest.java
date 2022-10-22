@@ -21,7 +21,7 @@ import com.shopapp.shopApp.service.confirmationtoken.ConfirmationTokenServiceImp
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -43,31 +43,31 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
 
+    @Mock
     private AppUserRepository userRepo;
+    @Mock
     private AuthenticationManager authenticationManager;
+    @Mock
     private JwtUtils jwtUtils;
+    @Mock
     private EmailSenderImpl emailSender;
+    @Mock
     private ConfirmationTokenServiceImpl tokenService;
+    @Mock
     private CustomPasswordEncoder passwordEncoder;
+    @Mock
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Mock
     private PasswordResetTokenRepository passwordTokenRepo;
+    @Mock
     private AppUserServiceImpl userService;
+    @Mock
     private Authentication authentication;
+
     private AuthServiceImpl authService;
 
     @BeforeEach
     void setUp() throws Exception {
-        this.userRepo = Mockito.mock(AppUserRepository.class);
-        this.jwtUtils = Mockito.mock(JwtUtils.class);
-        this.emailSender = Mockito.mock(EmailSenderImpl.class);
-        this.tokenService = Mockito.mock(ConfirmationTokenServiceImpl.class);
-        this.passwordEncoder = Mockito.mock(CustomPasswordEncoder.class);
-        this.bCryptPasswordEncoder = Mockito.mock(BCryptPasswordEncoder.class);
-        this.passwordTokenRepo = Mockito.mock(PasswordResetTokenRepository.class);
-        this.userService = Mockito.mock(AppUserServiceImpl.class);
-        this.authentication = Mockito.mock(Authentication.class);
-        this.authenticationManager = Mockito.mock(AuthenticationManager.class);
-
         this.authService =
                 new AuthServiceImpl(userRepo, authenticationManager, jwtUtils, emailSender, tokenService, passwordEncoder, passwordTokenRepo, userService);
     }

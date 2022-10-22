@@ -3,7 +3,6 @@ package com.shopapp.shopApp.service;
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.exception.product.ProductReviewNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
-import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.ProductReview;
 import com.shopapp.shopApp.repository.ProductReviewRepository;
 import com.shopapp.shopApp.service.product.ProductReviewServiceImpl;
@@ -14,7 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.REVIEW_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
