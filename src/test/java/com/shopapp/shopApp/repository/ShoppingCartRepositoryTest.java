@@ -1,7 +1,9 @@
-package com.shopapp.shopApp.AppUserTests.ProductTests;
+package com.shopapp.shopApp.repository;
 
-import com.shopapp.shopApp.model.*;
-import com.shopapp.shopApp.repository.*;
+import com.shopapp.shopApp.model.AppUser;
+import com.shopapp.shopApp.model.CartItem;
+import com.shopapp.shopApp.model.Product;
+import com.shopapp.shopApp.model.ShoppingCart;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +14,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
-class OrderRepositoryTest {
+public class ShoppingCartRepositoryTest {
 
     @Autowired
     private ShoppingCartRepository shoppingCartRepo;
@@ -28,10 +29,8 @@ class OrderRepositoryTest {
     private CartItemRepository cartItemRepo;
     @Autowired
     private AppUserRepository userRepo;
-    @Autowired
-    private OrderRepository orderRepo;
 
-    private UserOrder order;
+    private ShoppingCart cart;
 
     @BeforeEach
     void setUp() {
@@ -79,7 +78,7 @@ class OrderRepositoryTest {
 
         userRepo.save(user);
 
-        ShoppingCart cart = new ShoppingCart(
+        this.cart = new ShoppingCart(
                 null,
                 UUID.randomUUID().toString(),
                 user,
@@ -100,97 +99,67 @@ class OrderRepositoryTest {
         cart.getItems().add(itemTwo);
 
         shoppingCartRepo.save(cart);
-
-        this.order = UserOrder.builder()
-                .id(null)
-                .orderCode(UUID.randomUUID().toString())
-                .cart(cart)
-                .orderedAt(LocalDateTime.now())
-                .hasPaid(false)
-                .totalPrice(opel.getPrice() + bmw.getPrice())
-                .isDelivered(false)
-                .build();
-
-        orderRepo.save(order);
     }
 
     @Test
-    void itShouldFindOrderWithCartJoinedByOrderCode() {
+    void itShouldFindShoppingCartJoinedWithUserByShoppingCartCode() {
         // when
-        Optional<UserOrder> foundOrder = orderRepo.findByOrderCode(order.getOrderCode());
+        Optional<ShoppingCart> foundCart = shoppingCartRepo.findByShoppingCartCode(cart.getShoppingCartCode());
         // then
-        assertThat(foundOrder).isPresent();
-        assertThat(foundOrder).isNotEmpty();
-        assertThat(foundOrder).isInstanceOf(Optional.class);
-        assertThat(foundOrder.get()).isInstanceOf(UserOrder.class);
+        assertThat(foundCart).isPresent();
+        assertThat(foundCart).isNotEmpty();
+        assertThat(foundCart).isInstanceOf(Optional.class);
+        assertThat(foundCart.get()).isInstanceOf(ShoppingCart.class);
     }
 
     @Test
-    void itShouldNotFindOrderByOrderCode() {
+    void itShouldNotFindShoppingCartJoinedWithUserByShoppingCartCode() {
         // when
-        Optional<UserOrder> foundOrder = orderRepo.findByOrderCode(any());
+        Optional<ShoppingCart> foundCart = shoppingCartRepo.findByShoppingCartCode(any());
         // then
-        assertThat(foundOrder).isNotPresent();
-        assertThat(foundOrder).isEmpty();
-        assertThat(foundOrder).isInstanceOf(Optional.class);
+        assertThat(foundCart).isNotPresent();
+        assertThat(foundCart).isEmpty();
+        assertThat(foundCart).isInstanceOf(Optional.class);
     }
 
     @Test
-    void itShouldDeleteOrderByOrderCode() {
+    void itShouldFindAllShoppingCartsJoinedWithUser() {
         // when
-        Integer deletedRows = orderRepo.deleteByOrderCode(order.getOrderCode());
+        List<ShoppingCart> allCarts = shoppingCartRepo.findAll();
         // then
-        assertThat(deletedRows).isEqualTo(1).isNotZero();
-        assertThat(deletedRows).isInstanceOf(Integer.class);
+        assertThat(allCarts.size()).isNotZero();
+        assertThat(allCarts).isInstanceOf(List.class);
     }
 
     @Test
-    void itShouldNotDeleteOrderByOrderCode() {
-        // when
-        Integer deletedRows = orderRepo.deleteByOrderCode(any());
-        // then
-        assertThat(deletedRows).isZero();
-        assertThat(deletedRows).isInstanceOf(Integer.class);
-    }
-
-    @Test
-    void itShouldFindAllOrders() {
-        // when
-        List<UserOrder> allOrders = orderRepo.findAll();
-        // then
-        assertThat(allOrders).isInstanceOf(List.class);
-        assertThat(allOrders.size()).isGreaterThan(0);
-    }
-
-    @Test
-    void itShouldNotFindAllOrders() {
+    void itShouldNotFindAnyShoppingCartBecauseJoinedUserIsNull() {
         // given
-        orderRepo.delete(order);
+        cart.setUser(null);
+        shoppingCartRepo.save(cart);
         // when
-        List<UserOrder> allOrders = orderRepo.findAll();
+        List<ShoppingCart> allCarts = shoppingCartRepo.findAll();
         // then
-        assertThat(allOrders).isInstanceOf(List.class);
-        assertThat(allOrders.size()).isZero();
+        assertThat(allCarts.size()).isZero();
     }
 
     @Test
-    void itShouldFindOrdersIfDelivered() {
-        // given
-        order.setIsDelivered(true);
-        orderRepo.save(order);
+    void itShouldFindShoppingCartJoinedWithUserByShoppingCartId() {
         // when
-        List<UserOrder> deliveredOrders = orderRepo.getDeliveredOrders();
+        Optional<ShoppingCart> foundCart = shoppingCartRepo.findById(cart.getId());
         // then
-        assertThat(deliveredOrders).isInstanceOf(List.class);
-        assertThat(deliveredOrders.size()).isGreaterThan(0);
+        assertThat(foundCart).isPresent();
+        assertThat(foundCart).isNotEmpty();
+        assertThat(foundCart).isInstanceOf(Optional.class);
+        assertThat(foundCart.get()).isInstanceOf(ShoppingCart.class);
     }
 
     @Test
-    void itShouldNotFindOrdersIfDelivered() {
+    void itShouldNotFindShoppingCartJoinedWithUserByShoppingCartId() {
         // when
-        List<UserOrder> deliveredOrders = orderRepo.getDeliveredOrders();
+        Optional<ShoppingCart> foundCart = shoppingCartRepo.findById(any());
         // then
-        assertThat(deliveredOrders).isInstanceOf(List.class);
-        assertThat(deliveredOrders.size()).isZero();
+        assertThat(foundCart).isNotPresent();
+        assertThat(foundCart).isEmpty();
+        assertThat(foundCart).isInstanceOf(Optional.class);
     }
 }

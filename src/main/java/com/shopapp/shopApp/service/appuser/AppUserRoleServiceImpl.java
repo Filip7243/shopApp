@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.shopapp.shopApp.constants.ExceptionsConstants.ROLE_ALREADY_EXISTS;
 import static com.shopapp.shopApp.constants.ExceptionsConstants.ROLE_NOT_FOUND;
@@ -41,13 +42,11 @@ public class AppUserRoleServiceImpl implements AppUserRoleService {
 
     @Override
     public void updateRole(String roleName, AppUserRoleSaveUpdateDto role) {
-        if (roleRepository.existsByName(roleName)) {
-            AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName).get();
-            foundRole.setName(role.getName());
-            foundRole.setDescription(role.getDescription());
-            roleRepository.save(foundRole);
-        } else {
-            throw new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName));
-        }
+        AppUserRole foundRole = roleRepository.findAppUserRoleByName(roleName)
+                .orElseThrow(() -> new RoleNotFoundException(String.format(ROLE_NOT_FOUND, roleName)));
+        foundRole.setName(role.getName());
+        foundRole.setDescription(role.getDescription());
+
+        roleRepository.save(foundRole);
     }
 }

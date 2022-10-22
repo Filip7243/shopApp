@@ -1,7 +1,6 @@
-package com.shopapp.shopApp.AppUserTests;
+package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.model.AppUserRole;
-import com.shopapp.shopApp.repository.AppUserRoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ public class AppUserRoleRepositoryTest {
     @BeforeEach
     void setUp() {
         // given
-        AppUserRole roleOne = new AppUserRole(null, "ROLE_SUPER_ADMIN", "SUPER_ADMIN");
-        AppUserRole roleTwo = new AppUserRole(null, "ROLE_ADMIN", "ADMIN");
-        AppUserRole roleThree = new AppUserRole(null, "ROLE_USER", "USER");
+        AppUserRole roleOne = new AppUserRole(1L, "ROLE_SUPER_ADMIN", "SUPER_ADMIN");
+        AppUserRole roleTwo = new AppUserRole(2L, "ROLE_ADMIN", "ADMIN");
+        AppUserRole roleThree = new AppUserRole(3L, "ROLE_USER", "USER");
 
         roleRepo.save(roleOne);
         roleRepo.save(roleTwo);
@@ -68,7 +67,7 @@ public class AppUserRoleRepositoryTest {
     @Test
     void itShouldCheckIfRoleDoesNotExistsByName() {
         // when
-        Boolean role = roleRepo.existsByName("ROLE_ADMIN");
+        Boolean role = roleRepo.existsByName("ROLE_NOT_EXISTS");
 
         // then
         assertThat(role).isFalse();
@@ -77,7 +76,7 @@ public class AppUserRoleRepositoryTest {
     @Test
     void itShouldCheckIfRoleExistsById() {
         // when
-        boolean expected = roleRepo.existsById(1L);
+        Boolean expected = roleRepo.existsById(1L);
 
         // then
         assertThat(expected).isTrue();

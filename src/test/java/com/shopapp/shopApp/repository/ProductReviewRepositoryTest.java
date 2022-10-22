@@ -1,12 +1,9 @@
-package com.shopapp.shopApp.AppUserTests.ProductTests;
+package com.shopapp.shopApp.repository;
 
 import com.shopapp.shopApp.dto.ProductReviewAddUpdateDto;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.Product;
 import com.shopapp.shopApp.model.ProductReview;
-import com.shopapp.shopApp.repository.AppUserRepository;
-import com.shopapp.shopApp.repository.ProductRepository;
-import com.shopapp.shopApp.repository.ProductReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

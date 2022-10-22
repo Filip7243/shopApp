@@ -2,6 +2,7 @@ package com.shopapp.shopApp.controller;
 
 import com.shopapp.shopApp.dto.AppUserDisplayDto;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
+import com.shopapp.shopApp.exception.role.RoleExistsException;
 import com.shopapp.shopApp.exception.role.RoleNotFoundException;
 import com.shopapp.shopApp.exception.user.UserCodeNotFoundException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
@@ -57,14 +58,14 @@ public class AppUserController {
 
     @PostMapping("/roles/add")
     public ResponseEntity<?> addRoleToUser(@RequestParam String userCode, @RequestParam String roleName)
-            throws UserCodeNotFoundException, RoleNotFoundException, IllegalStateException {
+            throws UserCodeNotFoundException, RoleNotFoundException, RoleExistsException {
         userService.addRoleToUser(userCode, roleName);
         return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
     }
 
     @DeleteMapping("roles/delete")
     public ResponseEntity<?> deleteRoleFromUser(@RequestParam String userCode, @RequestParam String roleName)
-            throws UserCodeNotFoundException, RoleNotFoundException, IllegalStateException {
+            throws UserCodeNotFoundException, RoleNotFoundException {
         userService.deleteRoleFromUser(userCode, roleName);
         return ResponseEntity.ok(String.format(ROLE_ADDED_TO_USER, roleName, userCode));
     }
