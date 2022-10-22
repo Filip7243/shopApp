@@ -3,9 +3,13 @@ package com.shopapp.shopApp.service;
 import com.shopapp.shopApp.dto.AppUserSaveUpdateDto;
 import com.shopapp.shopApp.dto.LoginRequest;
 import com.shopapp.shopApp.email.EmailSenderImpl;
+import com.shopapp.shopApp.exception.token.ConfirmationTokenNotFoundException;
+import com.shopapp.shopApp.exception.token.PasswordResetTokenException;
 import com.shopapp.shopApp.exception.user.UserExistsException;
+import com.shopapp.shopApp.exception.user.UserNotFoundException;
 import com.shopapp.shopApp.model.AppUser;
 import com.shopapp.shopApp.model.AppUserRole;
+import com.shopapp.shopApp.model.PasswordResetToken;
 import com.shopapp.shopApp.repository.AppUserRepository;
 import com.shopapp.shopApp.repository.PasswordResetTokenRepository;
 import com.shopapp.shopApp.security.CustomPasswordEncoder;
@@ -26,12 +30,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 
-import static com.shopapp.shopApp.constants.ExceptionsConstants.USER_ALREADY_EXISTS;
+import static com.shopapp.shopApp.constants.ExceptionsConstants.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -143,6 +148,83 @@ public class AuthServiceTest {
         var exception =
                 assertThrows(UserExistsException.class, () -> authService.signUpUser(userDto));
         assertEquals(String.format(USER_ALREADY_EXISTS, userDto.getEmail()), exception.getMessage());
+        assertThat(exception).isInstanceOf(UserExistsException.class);
+    }
+
+    @Test
+    void canForgetPassword() {
+        when(userRepo.findByEmail(any())).thenReturn(Optional.of(new AppUser()));
+        authService.forgetPassword("test");
+
+        verify(passwordTokenRepo).save(any());
+        verify(emailSender).sendEmail(any(), any(), any());
+    }
+
+    @Test
+    void throwsUserNotFoundExceptionWhenForgetPassword() {
+        var email = anyString();
+
+        when(userRepo.findByEmail(email)).thenReturn(Optional.empty());
+        UserNotFoundException exception =
+                assertThrows(UserNotFoundException.class, () -> authService.forgetPassword(email));
+
+        assertEquals(String.format(USER_NOT_FOUND, email), exception.getMessage());
+        assertThat(exception).isInstanceOf(UserNotFoundException.class);
+    }
+
+    @Test
+    void canResetPassword() {
+        var token = new PasswordResetToken();
+        var user = new AppUser();
+        token.setToken("test");
+        token.setIsPasswordReset(false);
+        token.setExpiresAt(LocalDateTime.now().plusDays(1));
+        token.setUser(user);
+
+        when(passwordTokenRepo.findByToken("test")).thenReturn(Optional.of(token));
+        when(passwordEncoder.passwordEncoder()).thenReturn(bCryptPasswordEncoder);
+        authService.resetPassword(token.getToken());
+
+        verify(passwordEncoder.passwordEncoder()).encode("password-from-input");
+        assertTrue(token.getIsPasswordReset());
+        verify(passwordTokenRepo).save(token);
+        verify(userRepo).save(user);
+    }
+
+    @Test
+    void throwsConfirmationTokenNotFoundExceptionWhenResetPassword() {
+        when(passwordTokenRepo.findByToken("test")).thenReturn(Optional.empty());
+        var exception = assertThrows(ConfirmationTokenNotFoundException.class, () -> authService.resetPassword("test"));
+
+        assertEquals(TOKEN_NOT_FOUND, exception.getMessage());
+        assertThat(exception).isInstanceOf(ConfirmationTokenNotFoundException.class);
+    }
+
+    @Test
+    void throwsPasswordResetTokenExceptionIfTokenAlreadyUsedWhenResetPassword() {
+        var token = new PasswordResetToken();
+        token.setToken("test");
+        token.setIsPasswordReset(true);
+
+        when(passwordTokenRepo.findByToken("test")).thenReturn(Optional.of(token));
+        var exception =
+                assertThrows(PasswordResetTokenException.class, () -> authService.resetPassword("test"));
+
+        assertEquals("Token already used", exception.getMessage());
+        assertThat(exception).isInstanceOf(PasswordResetTokenException.class);
+    }
+
+    @Test
+    void throwsPasswordResetTokenExceptionIfTokenExpiredWhenResetPassword() {
+        var token = new PasswordResetToken();
+        token.setToken("test");
+        token.setIsPasswordReset(false);
+        token.setExpiresAt(LocalDateTime.now().minusDays(1));
+        when(passwordTokenRepo.findByToken("test")).thenReturn(Optional.of(token));
+        var exception =
+                assertThrows(PasswordResetTokenException.class, () -> authService.resetPassword("test"));
+        assertEquals("Token already expired!", exception.getMessage());
+        assertThat(exception).isInstanceOf(PasswordResetTokenException.class);
     }
 
 
