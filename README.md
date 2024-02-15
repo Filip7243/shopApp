@@ -62,6 +62,6 @@ public static final String SUPER_ADMIN = "ROLE_SUPER_ADMIN";
 
 ## Add Product To Shopping Cart
 
-### Request Params: shoppingCartCode, productCode
+#### Request Params: shoppingCartCode, productCode
 
 `POST /api/carts/item/add?shoppingCartCode=213&productCode=121`
