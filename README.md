@@ -6,13 +6,6 @@ Integration tests in future.
 
 API is role based, user can be:
 
-public static final String SUPER_ADMIN = "ROLE_SUPER_ADMIN";
-    public static final String ADMIN = "ROLE_ADMIN";
-    public static final String MANAGER = "ROLE_MANAGER";
-    public static final String USER = "ROLE_USER";
-    public static final String GUEST = "ROLE_GUEST";
-    public static final String ANONYMOUS = "ROLE_ANONYMOUS";
-
 | ROLE       	  | 
 |:---------------:|
 | SUPER ADMIN     | 
